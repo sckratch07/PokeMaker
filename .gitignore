@@ -1,0 +1,15 @@
+*/x64
+/x64
+/.vs
+*.obj
+*.pdb
+*.idb
+*.lastbuildstate
+*.tlog
+*.log
+*.ilk
+*.recipe
+*.db
+*.ipch
+*.iobj
+*.exe
