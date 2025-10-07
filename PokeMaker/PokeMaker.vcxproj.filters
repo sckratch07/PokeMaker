@@ -19,6 +19,12 @@
     <Filter Include="Fichiers d%27en-tête\ImGui">
       <UniqueIdentifier>{e5c8ffdf-45db-41e7-9333-d80024180d36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\TABS">
+      <UniqueIdentifier>{2fd32438-9279-44ce-97d0-10715ee0460b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\TABS">
+      <UniqueIdentifier>{1bd4f246-5104-48c0-b7ea-a0d40dbdda8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\ImGui\imgui.cpp">
@@ -40,6 +46,9 @@
       <Filter>Fichiers sources\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp">
+      <Filter>Fichiers sources\TABS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig.h">
@@ -68,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imstb_truetype.h">
       <Filter>Fichiers d%27en-tête\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Fichiers d%27en-tête\TABS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

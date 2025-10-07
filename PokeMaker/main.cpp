@@ -1,17 +1,14 @@
-#include "ImGui/imgui.h"
-#include "ImGui/imgui-SFML.h"
-#include "SFML/Graphics.hpp"
+#include "Tools.h"
+#include "Map.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "PokeMaker");
+	sf::RenderWindow window(sf::VideoMode({1280, 960}), "PokeMaker");
 	if (!ImGui::SFML::Init(window))
 		return -1;
 
 	sf::Clock deltaClock;
-	float float1 = 0.f;
-	float float2 = 0.f;
-	float float3 = 0.f;
+
 	while (window.isOpen())
 	{
 		while (const std::optional event = window.pollEvent())
@@ -23,21 +20,25 @@ int main()
 
 		ImGui::SFML::Update(window, deltaClock.restart());
 
-		ImGui::Begin("Test");
-		ImGui::BeginTabBar("0");
-		ImGui::BeginTabItem("1");
-		ImGui::SliderFloat("Float", &float1, 0.f, 10.f);
-		ImGui::EndTabItem();
-		ImGui::BeginTabItem("2");
-		ImGui::SliderFloat("Float", &float2, 0.f, 10.f);
-		ImGui::EndTabItem();
-		ImGui::BeginTabItem("3");
-		ImGui::SliderFloat("Float", &float3, 0.f, 10.f);
-		ImGui::EndTabItem();
-		ImGui::EndTabBar();
-		ImGui::End();
+		ImGui::SetNextWindowPos({ 0.f, 0.f });
+		ImGui::SetNextWindowSize(ImVec2((float)window.getSize().x, (float)window.getSize().y));
+		if (ImGui::Begin("PokeMaker", nullptr,
+			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+		{
+			if (ImGui::BeginTabBar("principal"))
+			{
+				if (ImGui::BeginTabItem("Map", nullptr))
+				{
+					updateMap();
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
+			}
+			ImGui::End();
+		}
 
-		window.clear(sf::Color(150, 150, 175, 255));
+		window.clear();
 
 		ImGui::SFML::Render(window);
 
