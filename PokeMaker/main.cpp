@@ -28,9 +28,17 @@ int main()
 		{
 			if (ImGui::BeginTabBar("principal"))
 			{
-				if (ImGui::BeginTabItem("Map", nullptr))
+				if (ImGui::BeginTabItem("Scene", nullptr))
 				{
 					updateMap();
+					ImGui::EndTabItem();
+				}
+				if (ImGui::BeginTabItem("Script", nullptr))
+				{
+					ImGui::EndTabItem();
+				}
+				if (ImGui::BeginTabItem("Assets", nullptr))
+				{
 					ImGui::EndTabItem();
 				}
 				ImGui::EndTabBar();
@@ -41,6 +49,7 @@ int main()
 		window.clear();
 
 		ImGui::SFML::Render(window);
+		renderMap(window);
 
 		window.display();
 	}

@@ -45,9 +45,11 @@
     <ClCompile Include="..\include\ImGui\imgui-SFML.cpp">
       <Filter>Fichiers sources\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp">
       <Filter>Fichiers sources\TABS</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
