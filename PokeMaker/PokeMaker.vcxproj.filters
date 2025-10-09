@@ -19,10 +19,10 @@
     <Filter Include="Fichiers d%27en-tête\ImGui">
       <UniqueIdentifier>{e5c8ffdf-45db-41e7-9333-d80024180d36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\TABS">
+    <Filter Include="Fichiers d%27en-tête\Tab">
       <UniqueIdentifier>{2fd32438-9279-44ce-97d0-10715ee0460b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\TABS">
+    <Filter Include="Fichiers sources\Tab">
       <UniqueIdentifier>{1bd4f246-5104-48c0-b7ea-a0d40dbdda8c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -46,7 +46,7 @@
       <Filter>Fichiers sources\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Fichiers sources\TABS</Filter>
+      <Filter>Fichiers sources\Tab</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
@@ -84,7 +84,7 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Fichiers d%27en-tête\TABS</Filter>
+      <Filter>Fichiers d%27en-tête\Tab</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
