@@ -122,7 +122,6 @@ constexpr Color& operator+=(Color& left, Color right)
     return left = left + right;
 }
 
-
 ////////////////////////////////////////////////////////////
 constexpr Color& operator-=(Color& left, Color right)
 {

@@ -1,90 +1,163 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Core">
+      <UniqueIdentifier>{cb47fe22-e866-4929-8011-9fd4fa45415c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{3e35514c-505c-4bd2-953a-01515b8fccfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Game">
+      <UniqueIdentifier>{99d0d96c-6f09-4873-a99c-9ac3c48da71a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\ImGui">
+    <Filter Include="Utils">
+      <UniqueIdentifier>{a8190a36-2e24-4f32-b3d3-3a42d946b064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extern">
+      <UniqueIdentifier>{ffafb0d8-023a-4db0-a5e4-ea0063197029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extern\nlohmann">
+      <UniqueIdentifier>{0e71834e-2a13-4ce1-a4f8-670494ac8cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extern\ImGui">
       <UniqueIdentifier>{d1028810-7216-44ab-a01e-919d2ca8a8ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\ImGui">
-      <UniqueIdentifier>{e5c8ffdf-45db-41e7-9333-d80024180d36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête\Tab">
-      <UniqueIdentifier>{2fd32438-9279-44ce-97d0-10715ee0460b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers sources\Tab">
-      <UniqueIdentifier>{1bd4f246-5104-48c0-b7ea-a0d40dbdda8c}</UniqueIdentifier>
+    <Filter Include="Extern\tinyfiledialogs">
+      <UniqueIdentifier>{af120b7a-631f-4ada-8d4d-a6e37cfbcf52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\ImGui\imgui.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\ImGui\imgui_demo.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\ImGui\imgui_draw.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\ImGui\imgui_tables.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\ImGui\imgui_widgets.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\ImGui\imgui-SFML.cpp">
-      <Filter>Fichiers sources\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Fichiers sources\Tab</Filter>
+    <ClCompile Include="Application.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="RessourceManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMapEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="JsonUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\tinyfiledialogs.c">
+      <Filter>Extern\tinyfiledialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imconfig-SFML.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imgui.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imgui_internal.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imgui-SFML.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imgui-SFML_export.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imstb_rectpack.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imstb_textedit.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ImGui\imstb_truetype.h">
-      <Filter>Fichiers d%27en-tête\ImGui</Filter>
+      <Filter>Extern\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Tools.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="SceneManager.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Fichiers d%27en-tête\Tab</Filter>
+    <ClInclude Include="RessourceManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUI.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEditor.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMapEditor.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonUtils.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nlohmann\json.hpp">
+      <Filter>Extern\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nlohmann\json_fwd.hpp">
+      <Filter>Extern\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tinyfiledialogs.h">
+      <Filter>Extern\tinyfiledialogs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

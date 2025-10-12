@@ -143,8 +143,20 @@
     <ClCompile Include="..\include\ImGui\imgui_draw.cpp" />
     <ClCompile Include="..\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\include\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="..\include\tinyfiledialogs.c" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="EditorUI.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityEditor.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="JsonUtils.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileMapEditor.cpp" />
+    <ClCompile Include="ProjectManager.cpp" />
+    <ClCompile Include="RessourceManager.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig-SFML.h" />
@@ -156,8 +168,21 @@
     <ClInclude Include="..\include\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\include\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\include\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Tools.h" />
+    <ClInclude Include="..\include\nlohmann\json.hpp" />
+    <ClInclude Include="..\include\nlohmann\json_fwd.hpp" />
+    <ClInclude Include="..\include\tinyfiledialogs.h" />
+    <ClInclude Include="Application.hpp" />
+    <ClInclude Include="EditorUI.hpp" />
+    <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="EntityEditor.hpp" />
+    <ClInclude Include="InputManager.hpp" />
+    <ClInclude Include="JsonUtils.hpp" />
+    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="TileMap.hpp" />
+    <ClInclude Include="TileMapEditor.hpp" />
+    <ClInclude Include="ProjectManager.hpp" />
+    <ClInclude Include="RessourceManager.hpp" />
+    <ClInclude Include="SceneManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
