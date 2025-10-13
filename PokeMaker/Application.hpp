@@ -1,26 +1,23 @@
 #pragma once
-#include "ProjectManager.hpp"
-#include "SceneManager.hpp"
-#include "EditorUI.hpp"
+#include <SFML/Graphics.hpp>
+#include "EditorState.hpp"
 
-class Application
-{
+class Application {
 public:
-	void run();
-	void handleEvents();
-	void update();
-	void render();
+    Application();
+    ~Application();
 
-	inline ProjectManager& getProjectManager()
-		{ return this->projectManager; }
-	inline SceneManager& getSceneManager()
-		{ return this->sceneManager; }
+    void Run();
+
 private:
-	sf::RenderWindow window;
-	bool isRunning = false;
-	sf::Clock deltaClock;
+    void ProcessEvents();
+    void Update(float dt);
+    void Render();
 
-	ProjectManager projectManager;
-	SceneManager sceneManager;
-	EditorUI editorUI;
+private:
+    sf::RenderWindow m_window;
+    sf::Clock m_deltaClock;
+    bool m_isRunning;
+
+    EditorState m_editorState;
 };

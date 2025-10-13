@@ -1,8 +1,7 @@
 #include "Application.hpp"
 
-Application game;
-
-int main()
-{
-	game.run();
+int main() {
+    Application app;
+    app.Run();
+    return 0;
 }

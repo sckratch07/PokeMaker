@@ -48,42 +48,27 @@
     <ClCompile Include="Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="RessourceManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="TileMapEditor.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityEditor.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorUI.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="JsonUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\include\tinyfiledialogs.c">
       <Filter>Extern\tinyfiledialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorState.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,38 +99,8 @@
     <ClInclude Include="..\include\ImGui\imstb_truetype.h">
       <Filter>Extern\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="RessourceManager.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectManager.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Application.hpp">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorUI.hpp">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityEditor.hpp">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="TileMapEditor.hpp">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="TileMap.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.hpp">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="JsonUtils.hpp">
       <Filter>Utils</Filter>
@@ -158,6 +113,21 @@
     </ClInclude>
     <ClInclude Include="..\include\tinyfiledialogs.h">
       <Filter>Extern\tinyfiledialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorState.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEditor.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
