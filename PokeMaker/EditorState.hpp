@@ -3,30 +3,26 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui-SFML.h>
 
-#include "UIManager.hpp"
+//#include "UIManager.hpp"
 #include "ProjectManager.hpp"
 #include "MapEditor.hpp"
 #include "Camera.hpp"
+#include "Project.hpp"
 
 class EditorState {
 public:
     EditorState();
-    ~EditorState() = default;
 
-    void Init();
-
-    void HandleInput(const sf::Event& event);
-    void Update(float dt);
-    void Render(sf::RenderWindow& window);
+    void Init();                                           // Initialisation complète
+    void HandleEvent(std::optional<sf::Event>& evant);     // Gestion des évènement
+    void Update(float dt);                                 // Mise à jour logique
+    void Render(sf::RenderWindow& window);                 // Rendu global
 
 private:
-    // Sous-systèmes
-    UIManager m_uiManager;
-    ProjectManager m_projectManager;
-    MapEditor m_mapEditor;
-    Camera m_camera;
-
-    // États internes
-    bool m_showDemoWindow;     // Fenêtre ImGui de debug
-    bool m_projectLoaded;      // Indique si un projet est chargé
+    //UIManager uiManager;                                   // Interface utilisateur (ImGui)
+    ProjectManager projectManager;                         // Gestion de projet
+    MapEditor mapEditor;                                   // Éditeur de carte
+    Camera camera;                                         // Caméra
+    Project* activeProject;                                // Projet actif (ou nullptr)
 };
+

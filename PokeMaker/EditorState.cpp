@@ -1,63 +1,59 @@
-#include "EditorState.hpp"
+ï»¿#include "EditorState.hpp"
 #include <iostream>
 
-EditorState::EditorState() : m_showDemoWindow(false) , m_projectLoaded(false) {}
+EditorState::EditorState() : activeProject(nullptr) {}
 
-void EditorState::Init() {
-    std::cout << "[EditorState] Initialisation de l'éditeur..." << std::endl;
+void EditorState::Init()
+{
+    // Initialisation des gestionnaires internes
+    projectManager = ProjectManager();
+    //uiManager = UIManager();
+    mapEditor = MapEditor(projectManager);
+    camera = Camera();
 
-    // Initialisation de la caméra
-    m_camera = Camera({ 640.f, 360.f }, { 1280.f, 720.f });
-
-    // Initialisation de la map par défaut
-    m_mapEditor.NewMap("DefaultMap", { 50, 50 }, { 32, 32 });
-
-    // Configuration du projet par défaut (temporaire)
-    m_projectManager.CreateProject("ProjetTest", "assets/projects/ProjetTest");
-
-    m_projectLoaded = true;
+    std::cout << "[EditorState] Initialise." << std::endl;
 }
 
-void EditorState::HandleInput(const sf::Event& event) {
-    // Si la fenêtre ImGui capture la souris, on ignore les entrées SFML
-    if (ImGui::GetIO().WantCaptureMouse)
-        return;
-
-    m_camera.HandleInput(event);
+void EditorState::HandleEvent(std::optional<sf::Event>& event)
+{
+    camera.HandleEvent(event);
 }
 
-void EditorState::Update(float dt) {
-    // Déplacement / zoom de la caméra
-    m_camera.Update(dt);
+void EditorState::Update(float dt)
+{
+    camera.Move(dt);
 
-    // Mise à jour de l'éditeur de carte (tiles, sélection, etc.)
-    m_mapEditor.Update(dt);
+    mapEditor.Update(dt);
 
-    // Interface utilisateur
-    m_uiManager.RenderMainMenu();
-
-    if (m_projectLoaded) {
-        m_uiManager.RenderTileSelector(m_mapEditor.GetActiveTileset());
-        m_uiManager.RenderLayerPanel(m_mapEditor.GetLayers());
-        m_uiManager.RenderPropertiesPanel(m_mapEditor.GetSelectedTile());
+    // Si un projet est actif, on peut aussi mettre Ã  jour ses donnÃ©es
+    if (activeProject) {
+        // exemple : mise Ã  jour dâ€™un aperÃ§u ou dâ€™une mini-map
     }
-
-    // Fenêtre de démo ImGui (désactivable)
-    if (m_showDemoWindow)
-        ImGui::ShowDemoWindow(&m_showDemoWindow);
-
-    // Gère les actions liées au menu
-    m_uiManager.HandleMenuActions(m_projectManager);
 }
 
-void EditorState::Render(sf::RenderWindow& window) {
-    // Appliquer la vue caméra pour afficher la map
-    m_camera.Apply(window);
+void EditorState::Render(sf::RenderWindow& window)
+{
+    // Appliquer la vue de la camÃ©ra
+    camera.Apply(window);
 
-    if (m_projectLoaded) {
-        m_mapEditor.Render(window);
-    }
+    // Rendu de la carte active
+    mapEditor.Render(window);
 
-    // Revenir à la vue par défaut pour l’interface ImGui
+    // Revenir Ã  la vue par dÃ©faut pour les interfaces
     window.setView(window.getDefaultView());
+
+    // Interface ImGui
+    //uiManager.RenderMainMenu();
+
+    // Si un projet est chargÃ©, afficher les panneaux
+    if (activeProject) {
+        // SÃ©lecteur de tuiles
+        // (MapEditor pourrait exposer un Tileset ou tuile active)
+        // Exemple : uiManager.RenderTileSelector(activeProject->GetTileset());
+    }
+    // Gestion des actions de menu (nouveau projet, sauvegarde, etc.)
+    //uiManager.HandleMenuActions(projectManager);
+
+    // Rendu final ImGui
+    ImGui::SFML::Render(window);
 }

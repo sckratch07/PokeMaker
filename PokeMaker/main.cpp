@@ -1,7 +1,7 @@
-#include "Application.hpp"
+#include "App.hpp"
 
 int main() {
-    Application app;
+    App app;
     app.Run();
     return 0;
 }

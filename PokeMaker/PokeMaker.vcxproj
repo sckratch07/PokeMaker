@@ -144,14 +144,17 @@
     <ClCompile Include="..\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\include\tinyfiledialogs.c" />
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EditorState.cpp" />
-    <ClCompile Include="JsonUtils.cpp" />
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapEditor.cpp" />
+    <ClCompile Include="Project.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
-    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Tileset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig-SFML.h" />
@@ -166,13 +169,16 @@
     <ClInclude Include="..\include\nlohmann\json.hpp" />
     <ClInclude Include="..\include\nlohmann\json_fwd.hpp" />
     <ClInclude Include="..\include\tinyfiledialogs.h" />
-    <ClInclude Include="Application.hpp" />
+    <ClInclude Include="App.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="EditorState.hpp" />
-    <ClInclude Include="JsonUtils.hpp" />
+    <ClInclude Include="Layer.hpp" />
+    <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapEditor.hpp" />
+    <ClInclude Include="Project.hpp" />
     <ClInclude Include="ProjectManager.hpp" />
-    <ClInclude Include="UIManager.hpp" />
+    <ClInclude Include="Tile.hpp" />
+    <ClInclude Include="Tileset.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

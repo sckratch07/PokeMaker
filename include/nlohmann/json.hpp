@@ -4277,6 +4277,14 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /// @{
 
   public:
+
+    /// @brief create a CBOR serialization of a given JSON value
+    /// @sa https://json.nlohmann.me/api/basic_json/to_cbor/
+    static void to_cbor(const basic_json& j, detail::output_adapter<std::uint8_t> o)
+    {
+        binary_writer<std::uint8_t>(o).write_cbor(j);
+    }
+
     /// @brief create a CBOR serialization of a given JSON value
     /// @sa https://json.nlohmann.me/api/basic_json/to_cbor/
     static std::vector<std::uint8_t> to_cbor(const basic_json& j)
@@ -4284,13 +4292,6 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         std::vector<std::uint8_t> result;
         to_cbor(j, result);
         return result;
-    }
-
-    /// @brief create a CBOR serialization of a given JSON value
-    /// @sa https://json.nlohmann.me/api/basic_json/to_cbor/
-    static void to_cbor(const basic_json& j, detail::output_adapter<std::uint8_t> o)
-    {
-        binary_writer<std::uint8_t>(o).write_cbor(j);
     }
 
     /// @brief create a CBOR serialization of a given JSON value

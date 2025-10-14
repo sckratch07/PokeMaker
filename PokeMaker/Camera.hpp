@@ -3,21 +3,22 @@
 
 class Camera {
 public:
-    Camera(const sf::Vector2f& center, const sf::Vector2f& size);
+    Camera();
+    ~Camera();
 
-    void HandleInput(const sf::Event& event);
+    void HandleEvent(std::optional<sf::Event>& event);      // Gestion de l’input clavier/souris
+    void Move(float dt);                                    // Déplacement relatif
+    void Zoom(float factor);                                // Zoom relatif
+    void Apply(sf::RenderWindow& window);                   // Appliquer la vue sur la fenêtre
+    sf::Vector2f GetCenter() const;                         // Centre de la vue
 
-    void Move(const sf::Vector2f& offset);
-    void Zoom(float factor);
-    void Update(float dt);
-    void Apply(sf::RenderWindow& window);
-
-    sf::View& GetView();
-    sf::Vector2f GetCenter() const;
-    float GetZoomLevel() const;
+    // Accesseurs / mutateurs
+    const sf::View& GetView() const { return view; }
+    void SetMoveSpeed(float speed) { moveSpeed = speed; }
+    void SetZoomLevel(float zoom) { zoomLevel = zoom; }
 
 private:
-    sf::View m_view;
-    float m_moveSpeed;      // vitesse de déplacement caméra
-    float m_zoomLevel;      // niveau de zoom actuel
+    sf::View view;
+    float moveSpeed;
+    float zoomLevel;
 };

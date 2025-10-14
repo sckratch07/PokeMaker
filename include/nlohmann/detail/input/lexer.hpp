@@ -863,6 +863,7 @@ class lexer : public lexer_base<BasicJsonType>
                             break;
                     }
                 }
+                [[fallthrough]];
             }
 
             // multi-line comments skip input until */ is read
@@ -898,6 +899,7 @@ class lexer : public lexer_base<BasicJsonType>
                             continue;
                     }
                 }
+                [[fallthrough]];
             }
 
             // unexpected character after reading '/'

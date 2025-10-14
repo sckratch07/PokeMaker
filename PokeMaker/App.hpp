@@ -1,0 +1,24 @@
+#pragma once
+#include "SFML/Graphics.hpp"
+#include "EditorState.hpp"
+
+class App {
+public:
+    App();
+    ~App();
+
+    // Démarre la boucle principale
+    void Run();
+    // Gère la file d'événements SFML
+    void ProcessEvents();
+    // Mise à jour de la logique
+    void Update(sf::Time& dt);
+    // Rendu
+    void Render();
+
+private:
+    sf::RenderWindow window;
+    sf::Time deltaTime;
+    EditorState editorState;
+    bool isRunning;
+};
