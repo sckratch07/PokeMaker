@@ -7,9 +7,6 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{3e35514c-505c-4bd2-953a-01515b8fccfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{99d0d96c-6f09-4873-a99c-9ac3c48da71a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Extern">
       <UniqueIdentifier>{ffafb0d8-023a-4db0-a5e4-ea0063197029}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,6 @@
     <ClCompile Include="ProjectManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Project.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Layer.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -73,7 +67,15 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="MapEditor.cpp" />
+    <ClCompile Include="MapEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Project.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig.h">
@@ -121,9 +123,6 @@
     <ClInclude Include="ProjectManager.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Project.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Layer.hpp">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -139,6 +138,14 @@
     <ClInclude Include="Camera.hpp">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="MapEditor.hpp" />
+    <ClInclude Include="MapEditor.hpp">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Project.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

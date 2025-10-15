@@ -17,10 +17,10 @@ bool ProjectManager::CreateProject(const std::string& name, const std::string& p
         currentProject = Project(name, path);
 
         // Création d’un fichier de base du projet (vide au début)
-        return SaveProject(path + "/" + name + ".json");
+        return SaveProject(path + (char)92 + name + ".json");
     }
     catch (const std::exception& e) {
-        std::cerr << "[ProjectManager] Erreur lors de la création du projet : " << e.what() << std::endl;
+        std::cerr << "[ProjectManager] Erreur lors de la creation du projet : " << e.what() << std::endl;
         return false;
     }
 }
@@ -40,7 +40,7 @@ bool ProjectManager::LoadProject(const std::string& path)
 
         currentProject.Deserialize(data);
 
-        std::cout << "[ProjectManager] Projet chargé depuis " << path << std::endl;
+        std::cout << "[ProjectManager] Projet charge depuis " << path << std::endl;
         return true;
     }
     catch (const std::exception& e) {
@@ -56,7 +56,7 @@ bool ProjectManager::SaveProject(const std::string& path)
 
         std::ofstream file(path);
         if (!file.is_open()) {
-            std::cerr << "[ProjectManager] Impossible d’écrire dans le fichier : " << path << std::endl;
+            std::cerr << "[ProjectManager] Impossible d’ecrire dans le fichier : " << path << std::endl;
             return false;
         }
 
@@ -64,7 +64,7 @@ bool ProjectManager::SaveProject(const std::string& path)
         file << data.dump(4);
         file.close();
 
-        std::cout << "[ProjectManager] Projet sauvegardé : " << path << std::endl;
+        std::cout << "[ProjectManager] Projet sauvegarde : " << path << std::endl;
         return true;
     }
     catch (const std::exception& e) {
@@ -73,7 +73,7 @@ bool ProjectManager::SaveProject(const std::string& path)
     }
 }
 
-Project& ProjectManager::GetCurrentProject()
+Project* ProjectManager::GetCurrentProject()
 {
-    return currentProject;
+    return &currentProject;
 }

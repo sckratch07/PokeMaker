@@ -10,16 +10,6 @@ void Map::AddLayer(const std::string& layerName)
     layers.emplace_back(layerName, id);
 }
 
-Layer& Map::GetLayer(int id)
-{
-    return layers.at(id); // lève une exception si hors limites
-}
-
-std::vector<Layer> Map::GetLayers()
-{
-    return layers;
-}
-
 void Map::Render(sf::RenderWindow& window)
 {
     for (auto& layer : layers) {

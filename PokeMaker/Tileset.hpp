@@ -8,7 +8,6 @@ using json = nlohmann::json;
 class Tileset {
 public:
     Tileset();
-    ~Tileset();
 
     bool LoadFromFile(const std::string& path);
     sf::IntRect GetTileTextureRect(int id) const;
@@ -24,7 +23,7 @@ public:
 private:
     std::string name;
     sf::Texture texture;
-    sf::Vector2i tileSize;
+    sf::Vector2i tileSize = { 0,0 };
     int columns;
     int rows;
 };

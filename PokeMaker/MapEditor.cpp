@@ -1,25 +1,24 @@
 #include "MapEditor.hpp"
 #include <iostream>
 
-MapEditor::MapEditor(ProjectManager& projectManager) : activeMap(nullptr), gridVisible(true), showCollision(false), projectManager(projectManager) {}
-
-void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize)
+void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize, ProjectManager& projectManager)
 {
-    Project& currentProject = projectManager.GetCurrentProject();
+    Project* currentProject = projectManager.GetCurrentProject();
 
     Map newMap(name, size, tileSize);
-    currentProject.AddMap(newMap);
+    
+    currentProject->AddMap(newMap);
 
     activeMap = &newMap;
     activeMap->AddLayer("Layer 0");
 
-    std::cout << "[MapEditor] Nouvelle map créée : " << name << std::endl;
+    std::cout << "[MapEditor] Nouvelle map : " << name << std::endl;
 }
 
-void MapEditor::LoadMap(const std::string& name)
+void MapEditor::LoadMap(const std::string& name, ProjectManager& projectManager)
 {
-    Project& currentProject = projectManager.GetCurrentProject();
-    activeMap = currentProject.GetMap(name);
+    Project* currentProject = projectManager.GetCurrentProject();
+    activeMap = currentProject->GetMap(name);
 
     std::cout << "[MapEditor] Chargement de la map : " << name << std::endl;
 }

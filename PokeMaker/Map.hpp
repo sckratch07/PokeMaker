@@ -14,17 +14,20 @@ public:
     Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize);
 
     void AddLayer(const std::string& name);
-    Layer& GetLayer(int id);
-    std::vector<Layer> GetLayers();
     void Render(sf::RenderWindow& window);
 
     json Serialize() const;
     void Deserialize(const json& jsonData);
 
+    void SetTileset(Tileset* _tileset) { tileset = _tileset; }
+
     // Accesseurs
-    const std::string& GetName() const { return name; }
-    const sf::Vector2i& GetSize() const { return size; }
-    const sf::Vector2i& GetTileSize() const { return tileSize; }
+    inline Layer& GetLayer(int id) { return layers.at(id); };
+    inline std::vector<Layer>& GetLayers() { return layers; };
+    inline std::string& GetName() { return name; }
+    inline sf::Vector2i& GetSize() { return size; }
+    inline sf::Vector2i& GetTileSize() { return tileSize; }
+    inline Tileset& GetTileset() { return *tileset; }
 
 private:
     std::string name;

@@ -3,7 +3,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui-SFML.h>
 
-//#include "UIManager.hpp"
+#include "UIManager.hpp"
 #include "ProjectManager.hpp"
 #include "MapEditor.hpp"
 #include "Camera.hpp"
@@ -19,7 +19,7 @@ public:
     void Render(sf::RenderWindow& window);                 // Rendu global
 
 private:
-    //UIManager uiManager;                                   // Interface utilisateur (ImGui)
+    UIManager uiManager;                                   // Interface utilisateur (ImGui)
     ProjectManager projectManager;                         // Gestion de projet
     MapEditor mapEditor;                                   // Éditeur de carte
     Camera camera;                                         // Caméra

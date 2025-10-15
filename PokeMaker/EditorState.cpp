@@ -7,9 +7,11 @@ void EditorState::Init()
 {
     // Initialisation des gestionnaires internes
     projectManager = ProjectManager();
-    //uiManager = UIManager();
-    mapEditor = MapEditor(projectManager);
+    uiManager = UIManager();
+    mapEditor = MapEditor();
     camera = Camera();
+
+    activeProject = projectManager.GetCurrentProject();
 
     std::cout << "[EditorState] Initialise." << std::endl;
 }
@@ -22,12 +24,14 @@ void EditorState::HandleEvent(std::optional<sf::Event>& event)
 void EditorState::Update(float dt)
 {
     camera.Move(dt);
-
     mapEditor.Update(dt);
 
-    // Si un projet est actif, on peut aussi mettre à jour ses données
-    if (activeProject) {
-        // exemple : mise à jour d’un aperçu ou d’une mini-map
+    if (!mapEditor.GetActiveMap() && activeProject)
+    {
+        mapEditor.NewMap("Base", { 32, 32 }, { 32, 32 }, projectManager);
+        Tileset tileset;
+        tileset.LoadFromFile("Hills.png");
+        mapEditor.GetActiveMap()->SetTileset(&tileset);
     }
 }
 
@@ -43,16 +47,20 @@ void EditorState::Render(sf::RenderWindow& window)
     window.setView(window.getDefaultView());
 
     // Interface ImGui
-    //uiManager.RenderMainMenu();
+    uiManager.RenderMainMenu(projectManager);
 
     // Si un projet est chargé, afficher les panneaux
-    if (activeProject) {
+    if (mapEditor.GetActiveMap() && activeProject)
+    {
+        // Panel des layers
+        uiManager.RenderLayerPanel(mapEditor.GetActiveMap()->GetLayers());
+        
         // Sélecteur de tuiles
-        // (MapEditor pourrait exposer un Tileset ou tuile active)
-        // Exemple : uiManager.RenderTileSelector(activeProject->GetTileset());
+        uiManager.RenderTileSelector(mapEditor.GetActiveMap()->GetTileset());
     }
+
     // Gestion des actions de menu (nouveau projet, sauvegarde, etc.)
-    //uiManager.HandleMenuActions(projectManager);
+    uiManager.HandleMenuActions(projectManager);
 
     // Rendu final ImGui
     ImGui::SFML::Render(window);

@@ -1,6 +1,5 @@
 #pragma once
 #include "Project.hpp"
-//#include "ResourceManager.hpp"
 #include <string>
 #include "nlohmann/json.hpp"
 
@@ -14,9 +13,8 @@ public:
     bool CreateProject(const std::string& name, const std::string& path);
     bool LoadProject(const std::string& path);
     bool SaveProject(const std::string& path);
-    Project& GetCurrentProject();
+    Project* GetCurrentProject();
 
 private:
     Project currentProject;        // Projet actuellement chargé
-    //ResourceManager resourceManager; // Gestion des ressources (textures, fonts, etc.)
 };

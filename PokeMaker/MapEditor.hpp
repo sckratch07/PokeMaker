@@ -5,11 +5,8 @@
 
 class MapEditor {
 public:
-    MapEditor() = default;
-    MapEditor(ProjectManager& projectManager);
-
-    void NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize);
-    void LoadMap(const std::string& name);
+    void NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize, ProjectManager& projectManager);
+    void LoadMap(const std::string& name, ProjectManager& projectManager);
 
     void Render(sf::RenderWindow& window);
     void Update(float dt);
@@ -23,7 +20,6 @@ public:
 
 private:
     Map* activeMap = nullptr;                  // carte actuellement éditée
-    ProjectManager projectManager;             // Pour liste de map
-    bool gridVisible;
-    bool showCollision;
+    bool gridVisible = true;
+    bool showCollision = false;
 };

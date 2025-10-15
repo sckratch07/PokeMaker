@@ -3,8 +3,6 @@
 
 Tileset::Tileset() : name(""), tileSize(32, 32), columns(0), rows(0) {}
 
-Tileset::~Tileset() { delete this; }
-
 bool Tileset::LoadFromFile(const std::string& path)
 {
     if (!texture.loadFromFile(path)) {
