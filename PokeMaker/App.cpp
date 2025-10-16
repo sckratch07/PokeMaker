@@ -65,7 +65,7 @@ void App::Update(sf::Time& dt)
     ImGui::SFML::Update(window, dt);
 
     // Mise à jour de l'état de l'éditeur
-    editorState.Update(dt.asSeconds());
+    editorState.Update(dt.asSeconds(), window);
 }
 
 void App::Render()

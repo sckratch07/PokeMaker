@@ -24,7 +24,7 @@ public:
 private:
     sf::Vector2i position;       // Position en tiles
     sf::IntRect textureRect;     // Portion de texture à afficher
-    sf::Sprite* sprite = nullptr;
+    sf::RectangleShape sprite;
     bool collidable;
     int layerIndex;
 };

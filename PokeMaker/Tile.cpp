@@ -1,23 +1,23 @@
 #include "Tile.hpp"
 
-Tile::Tile() : position(0, 0), textureRect({ 0, 0 }, { 32, 32 }), collidable(false), layerIndex(0) {}
+Tile::Tile() : sprite({32, 32}), position(0, 0), textureRect({0, 0}, {32, 32}), collidable(false), layerIndex(0) {}
 
-Tile::Tile(const sf::Vector2i& pos, const sf::IntRect& rect, int layer) : position(pos), textureRect(rect), collidable(false), layerIndex(layer)
+Tile::Tile(const sf::Vector2i& pos, const sf::IntRect& rect, int layer) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), layerIndex(layer)
 {
-    sprite->setPosition({ (float)pos.x, (float)pos.y });
-    sprite->setTextureRect(rect);
+    sprite.setPosition({ (float)pos.x, (float)pos.y });
+    sprite.setTextureRect(rect);
 }
 
 void Tile::Draw(sf::RenderWindow& window)
 {
-    window.draw(*sprite);
+    window.draw(sprite);
 }
 
 void Tile::SetTransparency(uint8_t alpha)
 {
-    sf::Color c = sprite->getColor();
+    sf::Color c = sprite.getFillColor();
     c.a = alpha;
-    sprite->setColor(c);
+    sprite.setFillColor(c);
 }
 
 json Tile::Serialize() const
@@ -45,6 +45,7 @@ void Tile::Deserialize(const json& jsonData)
     collidable = jsonData.value("collidable", false);
     layerIndex = jsonData.value("layerIndex", 0);
 
-    sprite->setPosition({ (float)position.x, (float)position.y });
-    sprite->setTextureRect(textureRect);
+    sprite.setSize(sf::Vector2f(textureRect.size));
+    sprite.setPosition({ (float)position.x, (float)position.y });
+    sprite.setTextureRect(textureRect);
 }

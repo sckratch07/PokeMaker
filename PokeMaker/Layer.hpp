@@ -10,7 +10,7 @@ using json = nlohmann::json;
 class Layer {
 public:
     Layer();
-    Layer(const std::string& name, int id);
+    Layer(const std::string& name, int id, sf::Vector2i& size);
 
     void SetTile(int x, int y, const Tile& tile);
     Tile* GetTile(int x, int y);

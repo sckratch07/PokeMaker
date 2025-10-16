@@ -1,15 +1,19 @@
 #include "MapEditor.hpp"
 #include <iostream>
 
+MapEditor::~MapEditor()
+{
+    delete activeMap;
+    delete tileset;
+}
+
 void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize, ProjectManager& projectManager)
 {
     Project* currentProject = projectManager.GetCurrentProject();
 
-    Map newMap(name, size, tileSize);
-    
-    currentProject->AddMap(newMap);
-
-    activeMap = &newMap;
+    if (activeMap) delete activeMap;
+    activeMap = new Map(name, size, tileSize);
+    currentProject->AddMap(*activeMap);
     activeMap->AddLayer("Layer 0");
 
     std::cout << "[MapEditor] Nouvelle map : " << name << std::endl;
@@ -17,15 +21,22 @@ void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const 
 
 void MapEditor::LoadMap(const std::string& name, ProjectManager& projectManager)
 {
+    if (activeMap) delete activeMap;
     Project* currentProject = projectManager.GetCurrentProject();
     activeMap = currentProject->GetMap(name);
 
     std::cout << "[MapEditor] Chargement de la map : " << name << std::endl;
 }
 
-void MapEditor::Update(float dt)
+void MapEditor::LoadTileset(std::string path, const sf::Vector2i& tileSize)
 {
-    
+    if (tileset) delete tileset;
+
+    tileset = new Tileset();
+    tileset->LoadFromFile(path);
+
+    tileset->Deserialize(tileset->Serialize());
+    std::cout << "[MapEditor] Tileset charge : " << path << std::endl;
 }
 
 void MapEditor::Render(sf::RenderWindow& window)
@@ -34,27 +45,43 @@ void MapEditor::Render(sf::RenderWindow& window)
 
     activeMap->Render(window);
 
-    // Dessiner la grille au-dessus des tiles si activé
-    if (gridVisible) DrawGrid(window);
+    if (gridVisible)
+        DrawGrid(window);
+}
 
-    // Dessiner collisions si activé
-    if (showCollision) {
-        for (auto& layer : activeMap->GetLayers())
+void MapEditor::Update(float dt, sf::RenderWindow& window, UIManager& uiManager, Camera& camera)
+{
+    if (!activeMap || !tileset) return;
+
+    // Conversion de la position souris en coordonnées map
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, camera.GetView());
+    sf::Vector2i tilePos(
+        static_cast<int>(worldPos.x / activeMap->GetTileSize().x),
+        static_cast<int>(worldPos.y / activeMap->GetTileSize().y)
+    );
+
+    int selectedTileID = uiManager.GetSelectedTileID();
+    int selectedLayerIndex = uiManager.GetSelectedLayer();
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) &&
+        selectedTileID >= 0 && tilePos.x >= 0 && tilePos.y >= 0)
+    {
+
+        if (selectedLayerIndex < activeMap->GetLayers().size())
         {
-            // parcourir les tiles et dessiner un rectangle si collidable
-            for (auto& row : layer.GetTiles())
-            {
-                for (auto& tile : row)
-                {
-                    if (tile.IsCollidable())
-                    {
-                        sf::RectangleShape rect(sf::Vector2f(tile.GetSize()));
-                        rect.setPosition(sf::Vector2f(tile.GetPosition()));
-                        rect.setFillColor(sf::Color(255, 0, 0, 100));
-                        window.draw(rect);
-                    }
-                }
-            }
+            Layer& layer = activeMap->GetLayer(selectedLayerIndex);
+
+            sf::IntRect texRect = tileset->GetTileTextureRect(selectedTileID);
+            Tile newTile(
+                sf::Vector2i(tilePos.x * activeMap->GetTileSize().x, tilePos.y * activeMap->GetTileSize().y),
+                texRect, false
+            );
+
+            // Affecter la texture à la tuile
+            newTile.SetTransparency(255);
+            newTile.Deserialize(newTile.Serialize()); // pour setup sprite rect
+            layer.SetTile(tilePos.x, tilePos.y, newTile);
         }
     }
 }

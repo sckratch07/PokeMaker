@@ -11,7 +11,8 @@ void EditorState::Init()
     mapEditor = MapEditor();
     camera = Camera();
 
-    activeProject = projectManager.GetCurrentProject();
+    mapEditor.NewMap("DefaultMap", { 32, 18 }, { 32, 32 }, projectManager);
+    mapEditor.LoadTileset("Hills.png", { 32, 32 });
 
     std::cout << "[EditorState] Initialise." << std::endl;
 }
@@ -21,18 +22,10 @@ void EditorState::HandleEvent(std::optional<sf::Event>& event)
     camera.HandleEvent(event);
 }
 
-void EditorState::Update(float dt)
+void EditorState::Update(float dt, sf::RenderWindow& window)
 {
     camera.Move(dt);
-    mapEditor.Update(dt);
-
-    if (!mapEditor.GetActiveMap() && activeProject)
-    {
-        mapEditor.NewMap("Base", { 32, 32 }, { 32, 32 }, projectManager);
-        Tileset tileset;
-        tileset.LoadFromFile("Hills.png");
-        mapEditor.GetActiveMap()->SetTileset(&tileset);
-    }
+    mapEditor.Update(dt, window, uiManager, camera);
 }
 
 void EditorState::Render(sf::RenderWindow& window)
@@ -49,15 +42,13 @@ void EditorState::Render(sf::RenderWindow& window)
     // Interface ImGui
     uiManager.RenderMainMenu(projectManager);
 
-    // Si un projet est chargé, afficher les panneaux
-    if (mapEditor.GetActiveMap() && activeProject)
-    {
-        // Panel des layers
+    // Si une map est chargée, afficher les widgets
+    if (mapEditor.GetActiveMap())
         uiManager.RenderLayerPanel(mapEditor.GetActiveMap()->GetLayers());
-        
-        // Sélecteur de tuiles
-        uiManager.RenderTileSelector(mapEditor.GetActiveMap()->GetTileset());
-    }
+    if (mapEditor.GetTileset())
+        uiManager.RenderTileSelector(*mapEditor.GetTileset());
+
+    uiManager.RenderPropertiesPanel(nullptr);
 
     // Gestion des actions de menu (nouveau projet, sauvegarde, etc.)
     uiManager.HandleMenuActions(projectManager);

@@ -27,7 +27,6 @@ public:
     inline std::string& GetName() { return name; }
     inline sf::Vector2i& GetSize() { return size; }
     inline sf::Vector2i& GetTileSize() { return tileSize; }
-    inline Tileset& GetTileset() { return *tileset; }
 
 private:
     std::string name;

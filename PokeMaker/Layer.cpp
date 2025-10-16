@@ -2,7 +2,14 @@
 
 Layer::Layer() : name(""), id(0), visible(true), opacity(1.0f) {}
 
-Layer::Layer(const std::string& name, int id) : name(name), id(id), visible(true), opacity(1.0f) {}
+Layer::Layer(const std::string& name, int id, sf::Vector2i& size) : name(name), id(id), visible(true), opacity(1.0f)
+{
+    tiles.resize((size_t)size.y);
+    for (int i = 0; i < size.y; i++)
+    {
+        tiles[i].resize((size_t)size.x);
+    }
+}
 
 void Layer::SetTile(int x, int y, const Tile& tile)
 {

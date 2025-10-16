@@ -1,5 +1,6 @@
 #include "UIManager.hpp"
 #include "tinyfiledialogs.h"
+#include <string>
 #include <filesystem>
 
 UIManager::UIManager() : selectedTileID(-1), selectedLayer(0), selectedProjectPath("")
@@ -80,14 +81,15 @@ void UIManager::RenderTileSelector(Tileset& tileset)
     const sf::Texture& tex = tileset.GetTexture();
     const sf::Vector2i& tileSize = tileset.GetTileSize();
 
-    ImVec2 tileButtonSize((float)tileSize.x, (float)tileSize.y);
+    sf::Vector2f tileButtonSize(tileSize);
     int columns = tex.getSize().x / tileSize.x;
     int rows = tex.getSize().y / tileSize.y;
 
-    ImGui::Text("Tileset : %s", tileset.GetName().c_str());
+    ImGui::Text("Tileset : %s", tileset.GetPath().c_str());
     ImGui::Separator();
 
     // Utiliser ImGui::ImageButton pour chaque tile
+    sf::Sprite sprt(tex);
     for (int y = 0; y < rows; ++y)
     {
         for (int x = 0; x < columns; ++x)
@@ -95,22 +97,17 @@ void UIManager::RenderTileSelector(Tileset& tileset)
             int id = y * columns + x;
 
             sf::IntRect rect = tileset.GetTileTextureRect(id);
-            ImVec2 uv0(
-                rect.position.x / (float)tex.getSize().x,
-                rect.position.y / (float)tex.getSize().y
-            );
-            ImVec2 uv1(
-                (rect.position.x + rect.size.x) / (float)tex.getSize().x,
-                (rect.position.y + rect.size.y) / (float)tex.getSize().y
-            );
+            sprt.setTextureRect(rect);
 
-            if (ImGui::ImageButton(std::string("%d/%d", x, y).c_str(), (ImTextureID)tex.getNativeHandle(), tileButtonSize, uv0, uv1))
+            if (ImGui::ImageButton(std::string("##Tile" + std::to_string(id)).c_str(), sprt, tileButtonSize,
+                sf::Color::Transparent,
+                selectedTileID == id ? sf::Color::Transparent : sf::Color::White))
             {
                 selectedTileID = id;
             }
 
             if (x < columns - 1)
-                ImGui::SameLine();
+                ImGui::SameLine(0.0f, 0.5f);
         }
     }
 
@@ -146,7 +143,7 @@ void UIManager::RenderPropertiesPanel(Tile* selectedTile)
 {
     if (!showPropertiesPanel) return;
 
-    ImGui::Begin("Propriétés", &showPropertiesPanel);
+    ImGui::Begin("Proprietes", &showPropertiesPanel);
 
     if (selectedTile)
     {
@@ -158,7 +155,7 @@ void UIManager::RenderPropertiesPanel(Tile* selectedTile)
         }
     }
     else
-        ImGui::Text("Aucune tuile sélectionnée.");
+        ImGui::Text("Aucune tuile selectionnee.");
     ImGui::End();
 }
 
@@ -173,7 +170,7 @@ void UIManager::HandleMenuActions(ProjectManager& projectManager)
             std::filesystem::create_directories(path);
 
         if (projectManager.CreateProject(name, path))
-            std::cout << "[UIManager] Projet cree : " << name << " à " << path << std::endl;
+            std::cout << "[UIManager] Projet cree : " << name << " a " << path << std::endl;
         else
             std::cerr << "[UIManager] Echec de la creation du projet." << std::endl;
 

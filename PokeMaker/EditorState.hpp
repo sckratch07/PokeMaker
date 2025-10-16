@@ -15,7 +15,7 @@ public:
 
     void Init();                                           // Initialisation complète
     void HandleEvent(std::optional<sf::Event>& evant);     // Gestion des évènement
-    void Update(float dt);                                 // Mise à jour logique
+    void Update(float dt, sf::RenderWindow& window);       // Mise à jour logique
     void Render(sf::RenderWindow& window);                 // Rendu global
 
 private:

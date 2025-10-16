@@ -7,7 +7,7 @@ Map::Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& 
 void Map::AddLayer(const std::string& layerName)
 {
     int id = static_cast<int>(layers.size());
-    layers.emplace_back(layerName, id);
+    layers.emplace_back(layerName, id, GetSize());
 }
 
 void Map::Render(sf::RenderWindow& window)

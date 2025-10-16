@@ -1,7 +1,7 @@
 #include "Tileset.hpp"
 #include <iostream>
 
-Tileset::Tileset() : name(""), tileSize(32, 32), columns(0), rows(0) {}
+Tileset::Tileset() : path(""), tileSize(32, 32), columns(0), rows(0) {}
 
 bool Tileset::LoadFromFile(const std::string& path)
 {
@@ -10,7 +10,7 @@ bool Tileset::LoadFromFile(const std::string& path)
         return false;
     }
 
-    name = path;
+    this->path = path;
 
     // Calcul des colonnes et lignes en fonction de la taille de la texture
     if (tileSize.x > 0 && tileSize.y > 0) {
@@ -33,7 +33,7 @@ sf::IntRect Tileset::GetTileTextureRect(int id) const
 json Tileset::Serialize() const
 {
     json j;
-    j["name"] = name;
+    j["path"] = path;
     j["tileSize"] = { tileSize.x, tileSize.y };
     j["columns"] = columns;
     j["rows"] = rows;
@@ -42,7 +42,7 @@ json Tileset::Serialize() const
 
 void Tileset::Deserialize(const json& jsonData)
 {
-    name = jsonData.value("name", "");
+    path = jsonData.value("path", "");
     if (jsonData.contains("tileSize") && jsonData["tileSize"].is_array() && jsonData["tileSize"].size() == 2) {
         tileSize.x = jsonData["tileSize"][0];
         tileSize.y = jsonData["tileSize"][1];
@@ -50,9 +50,9 @@ void Tileset::Deserialize(const json& jsonData)
     columns = jsonData.value("columns", 0);
     rows = jsonData.value("rows", 0);
 
-    if (!name.empty()) {
-        if (!texture.loadFromFile(name)) {
-            std::cerr << "[Tileset] Impossible de charger la texture depuis : " << name << std::endl;
+    if (!path.empty()) {
+        if (!texture.loadFromFile(path)) {
+            std::cerr << "[Tileset] Impossible de charger la texture depuis : " << path << std::endl;
         }
     }
 }
