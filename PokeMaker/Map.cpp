@@ -1,13 +1,18 @@
 #include "Map.hpp"
 
-Map::Map() : name(""), size(0, 0), tileSize(32, 32), tileset(nullptr) {}
+Map::Map() : name(""), size(0, 0), tileSize(32, 32) {}
 
-Map::Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize) : name(name), size(size), tileSize(tileSize), tileset(nullptr) {}
+Map::Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize) : name(name), size(size), tileSize(tileSize) {}
 
 void Map::AddLayer(const std::string& layerName)
 {
     int id = static_cast<int>(layers.size());
     layers.emplace_back(layerName, id, GetSize());
+}
+
+void Map::AddTileset(const Tileset& tileset)
+{
+    tilesets.push_back(tileset);
 }
 
 void Map::Render(sf::RenderWindow& window)
@@ -29,10 +34,10 @@ json Map::Serialize() const
         j["layers"].push_back(layer.Serialize());
     }
 
-    if (tileset)
-        j["tileset"] = tileset->Serialize();
-    else
-        j["tileset"] = nullptr;
+    j["tilesets"] = json::array();
+    for (const auto& tileset : tilesets) {
+        j["tilesets"].push_back(tileset.Serialize());
+    }
 
     return j;
 }
@@ -59,11 +64,11 @@ void Map::Deserialize(const json& jsonData)
         }
     }
 
-    if (jsonData.contains("tileset") && !jsonData["tileset"].is_null()) {
-        tileset = new Tileset();
-        tileset->Deserialize(jsonData["tileset"]);
-    }
-    else {
-        tileset = nullptr;
+    if (jsonData.contains("tilesets") && jsonData["tilesets"].is_array()) {
+        for (const auto& tilesetJson : jsonData["tilesets"]) {
+            Tileset tileset;
+            tileset.Deserialize(tilesetJson);
+            tilesets.push_back(tileset);
+        }
     }
 }

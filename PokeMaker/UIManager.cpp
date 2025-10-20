@@ -10,7 +10,6 @@ UIManager::UIManager() : selectedTileID(-1), selectedLayer(0), selectedProjectPa
 
 void UIManager::RenderMainMenu(ProjectManager& projectManager)
 {
-    const char* filter[] = { "" };
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("Fichier"))
@@ -37,7 +36,6 @@ void UIManager::RenderMainMenu(ProjectManager& projectManager)
         {
             ImGui::MenuItem("Selecteur de tuiles", nullptr, &showTileSelector);
             ImGui::MenuItem("Calques", nullptr, &showLayersPanel);
-            ImGui::MenuItem("Proprietes", nullptr, &showPropertiesPanel);
             ImGui::EndMenu();
         }
 
@@ -72,20 +70,28 @@ void UIManager::RenderMainMenu(ProjectManager& projectManager)
     }
 }
 
-void UIManager::RenderTileSelector(Tileset& tileset)
+void UIManager::RenderTileSelector(Map* activeMap, int* currentTilesetIndex)
 {
     if (!showTileSelector) return;
 
+    std::vector<Tileset> tilesets = activeMap->GetTilesets();
+    const char* filters[] = {"*.png", "*.jpeg", "*.jpg"};
+
     ImGui::Begin("Selecteur de tuiles", &showTileSelector);
 
-    const sf::Texture& tex = tileset.GetTexture();
-    const sf::Vector2i& tileSize = tileset.GetTileSize();
+    if (tilesets.size() > 1)
+        ImGui::SliderInt("Tileset: ", currentTilesetIndex, 0, (int)tilesets.size() - 1);
+
+    Tileset currentTileset = tilesets[*currentTilesetIndex];
+    
+    const sf::Texture& tex = currentTileset.GetTexture();
+    const sf::Vector2i& tileSize = currentTileset.GetTileSize();
 
     sf::Vector2f tileButtonSize(tileSize);
     int columns = tex.getSize().x / tileSize.x;
     int rows = tex.getSize().y / tileSize.y;
 
-    ImGui::Text("Tileset : %s", tileset.GetPath().c_str());
+    ImGui::Text("Tileset : %s", currentTileset.GetPath().c_str());
     ImGui::Separator();
 
     // Utiliser ImGui::ImageButton pour chaque tile
@@ -96,7 +102,7 @@ void UIManager::RenderTileSelector(Tileset& tileset)
         {
             int id = y * columns + x;
 
-            sf::IntRect rect = tileset.GetTileTextureRect(id);
+            sf::IntRect rect = currentTileset.GetTileTextureRect(id);
             sprt.setTextureRect(rect);
 
             if (ImGui::ImageButton(std::string("##Tile" + std::to_string(id)).c_str(), sprt, tileButtonSize,
@@ -107,7 +113,29 @@ void UIManager::RenderTileSelector(Tileset& tileset)
             }
 
             if (x < columns - 1)
-                ImGui::SameLine(0.0f, 0.5f);
+                ImGui::SameLine(0.0f, 0.1f);
+        }
+    }
+    ImGui::Separator();
+    if (ImGui::Button("Create"))
+    {
+        const char* path = tinyfd_openFileDialog("Ouvrir une tileset...", "../", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
+        if (path)
+        {
+            Tileset newTileset;
+            if (newTileset.LoadFromFile(path))
+            {
+                newTileset.Deserialize({ {"tileSize", {tileSize.x, tileSize.y}} });
+                activeMap->AddTileset(newTileset);
+            }
+        }
+    }
+    if (tilesets.size() > 1)
+    {
+        ImGui::SameLine();
+        if (ImGui::Button("Delete")&&)
+        {
+            activeMap.
         }
     }
 
@@ -136,26 +164,6 @@ void UIManager::RenderLayerPanel(std::vector<Layer>& layers)
             selectedLayer = (int)(i);
         }
     }
-    ImGui::End();
-}
-
-void UIManager::RenderPropertiesPanel(Tile* selectedTile)
-{
-    if (!showPropertiesPanel) return;
-
-    ImGui::Begin("Proprietes", &showPropertiesPanel);
-
-    if (selectedTile)
-    {
-        ImGui::Text("Position : %d, %d", selectedTile->GetPosition().x, selectedTile->GetPosition().y);
-        bool collidable = selectedTile->IsCollidable();
-        if (ImGui::Checkbox("Collision", &collidable))
-        {
-            selectedTile->SetCollidable(collidable);
-        }
-    }
-    else
-        ImGui::Text("Aucune tuile selectionnee.");
     ImGui::End();
 }
 

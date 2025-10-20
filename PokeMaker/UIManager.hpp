@@ -14,25 +14,18 @@ public:
     UIManager();
 
     void RenderMainMenu(ProjectManager& projectManager);
-    void RenderTileSelector(Tileset& tileset);
-    void RenderLayerPanel(std::vector<Layer>& layers);
-    void RenderPropertiesPanel(Tile* selectedTile);
-    void HandleMenuActions(ProjectManager& projectManager);
 
-    // Accesseurs
-    bool IsTileSelectorVisible() const { return showTileSelector; }
-    bool IsLayersPanelVisible() const { return showLayersPanel; }
-    bool IsPropertiesPanelVisible() const { return showPropertiesPanel; }
+    void RenderTileSelector(Map* activeMap, int* currentTilesetIndex);
+    void RenderLayerPanel(std::vector<Layer>& layers);
+    void HandleMenuActions(ProjectManager& projectManager);
 
     int GetSelectedTileID() const { return selectedTileID; }
     int GetSelectedLayer() const { return selectedLayer; }
-
     const std::string& GetSelectedProjectPath() const { return selectedProjectPath; }
 
 private:
     bool showTileSelector = true;
     bool showLayersPanel = true;
-    bool showPropertiesPanel = true;
 
     int selectedTileID;
     int selectedLayer;

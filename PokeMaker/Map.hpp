@@ -19,7 +19,8 @@ public:
     json Serialize() const;
     void Deserialize(const json& jsonData);
 
-    void SetTileset(Tileset* _tileset) { tileset = _tileset; }
+    void AddTileset(const Tileset& tileset);
+    std::vector<Tileset>& GetTilesets() { return tilesets; }
 
     // Accesseurs
     inline Layer& GetLayer(int id) { return layers.at(id); };
@@ -33,5 +34,5 @@ private:
     sf::Vector2i size; // taille en tiles
     sf::Vector2i tileSize; // taille d’une tuile en pixels
     std::vector<Layer> layers;
-    Tileset* tileset; // pointeur vers le tileset utilisé
+    std::vector<Tileset> tilesets;
 };

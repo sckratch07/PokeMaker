@@ -7,7 +7,7 @@ using json = nlohmann::json;
 class Tile {
 public:
     Tile();
-    Tile(const sf::Vector2i& position, const sf::Texture& texture, const sf::IntRect& textureRect, int layerIndex = 0);
+    Tile(const sf::Vector2i& position, const sf::Texture& texture, const sf::IntRect& textureRect, int layerIndex = 0, int tilesetIndex = 0);
 
     void Draw(sf::RenderWindow& window);
     void SetTransparency(uint8_t alpha);
@@ -27,4 +27,5 @@ private:
     sf::RectangleShape sprite;
     bool collidable;
     int layerIndex;
+    int tilesetIndex;
 };

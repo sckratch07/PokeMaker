@@ -12,7 +12,7 @@ void EditorState::Init()
     camera = Camera();
 
     mapEditor.NewMap("DefaultMap", { 32, 18 }, { 32, 32 }, projectManager);
-    mapEditor.LoadTileset("Hills.png", { 32, 32 });
+    mapEditor.LoadTileset("TX Tileset Grass.png", { 32, 32 });
 
     std::cout << "[EditorState] Initialise." << std::endl;
 }
@@ -44,11 +44,10 @@ void EditorState::Render(sf::RenderWindow& window)
 
     // Si une map est chargée, afficher les widgets
     if (mapEditor.GetActiveMap())
+    {
         uiManager.RenderLayerPanel(mapEditor.GetActiveMap()->GetLayers());
-    if (mapEditor.GetTileset())
-        uiManager.RenderTileSelector(*mapEditor.GetTileset());
-
-    uiManager.RenderPropertiesPanel(nullptr);
+        uiManager.RenderTileSelector(mapEditor.GetActiveMap(), mapEditor.GetActiveTilesets());
+    }
 
     // Gestion des actions de menu (nouveau projet, sauvegarde, etc.)
     uiManager.HandleMenuActions(projectManager);

@@ -11,6 +11,7 @@ public:
 
     void NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize, ProjectManager& projectManager);
     void LoadMap(const std::string& name, ProjectManager& projectManager);
+
     void LoadTileset(std::string path, const sf::Vector2i& tileSize);
 
     void Render(sf::RenderWindow& window);
@@ -20,13 +21,9 @@ public:
     // Accesseurs
     void SetActiveMap(Map* map) { activeMap = map; }
     Map* GetActiveMap() const { return activeMap; }
-    Tileset* GetTileset() const { return tileset; }
-    void SetGridVisible(bool visible) { gridVisible = visible; }
-    void SetShowCollision(bool show) { showCollision = show; }
+    int* GetActiveTilesets() { return &activeTilesetIndex; }
 
 private:
     Map* activeMap = nullptr;                  // carte actuellement éditée
-    Tileset* tileset = nullptr;
-    bool gridVisible = true;
-    bool showCollision = false;
+    int activeTilesetIndex = 0;
 };
