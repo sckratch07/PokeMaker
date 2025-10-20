@@ -2,9 +2,10 @@
 
 Tile::Tile() : sprite({32, 32}), position(0, 0), textureRect({0, 0}, {32, 32}), collidable(false), layerIndex(0) {}
 
-Tile::Tile(const sf::Vector2i& pos, const sf::IntRect& rect, int layer) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), layerIndex(layer)
+Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRect& rect, int layer) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), layerIndex(layer)
 {
     sprite.setPosition({ (float)pos.x, (float)pos.y });
+    sprite.setTexture(&texture);
     sprite.setTextureRect(rect);
 }
 

@@ -75,12 +75,11 @@ void MapEditor::Update(float dt, sf::RenderWindow& window, UIManager& uiManager,
             sf::IntRect texRect = tileset->GetTileTextureRect(selectedTileID);
             Tile newTile(
                 sf::Vector2i(tilePos.x * activeMap->GetTileSize().x, tilePos.y * activeMap->GetTileSize().y),
-                texRect, false
+                tileset->GetTexture(), texRect, false
             );
 
             // Affecter la texture à la tuile
             newTile.SetTransparency(255);
-            newTile.Deserialize(newTile.Serialize()); // pour setup sprite rect
             layer.SetTile(tilePos.x, tilePos.y, newTile);
         }
     }
