@@ -1,18 +1,15 @@
 ﻿#include "EditorState.hpp"
+#include "tinyfiledialogs.h"
 #include <iostream>
 
-EditorState::EditorState() : activeProject(nullptr) {}
+EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLayer(0), selectedTileID(0), tileSize(32,32) {}
 
 void EditorState::Init()
 {
     // Initialisation des gestionnaires internes
     projectManager = ProjectManager();
-    uiManager = UIManager();
     mapEditor = MapEditor();
     camera = Camera();
-
-    mapEditor.NewMap("DefaultMap", { 32, 18 }, { 32, 32 }, projectManager);
-    mapEditor.LoadTileset("TX Tileset Grass.png", { 32, 32 });
 
     std::cout << "[EditorState] Initialise." << std::endl;
 }
@@ -25,7 +22,29 @@ void EditorState::HandleEvent(std::optional<sf::Event>& event)
 void EditorState::Update(float dt, sf::RenderWindow& window)
 {
     camera.Move(dt);
-    mapEditor.Update(dt, window, uiManager, camera);
+    mapEditor.Update(dt, window, selectedTileID, selectedLayer, camera);
+
+    // Interface ImGui
+    RenderMainMenu();
+
+    // Si une map est chargée, afficher les widgets
+    if (activeProject)
+    {
+        RenderLayerPanel();
+        RenderTileSelector();
+    }
+
+    if (projectManager.IsNewProject())
+    {
+        activeProject = projectManager.GetCurrentProject();
+
+        if (activeProject->GetMaps().size() == 0)
+            mapEditor.NewMap("Default", { 1, 2 }, { 32, 32 }, projectManager);
+        else
+            mapEditor.SetActiveMap(activeProject->GetMap("Default"));
+
+        projectManager.ProjectIsLoaded(false);
+    }
 }
 
 void EditorState::Render(sf::RenderWindow& window)
@@ -36,22 +55,190 @@ void EditorState::Render(sf::RenderWindow& window)
     // Rendu de la carte active
     mapEditor.Render(window);
 
-    // Revenir à la vue par défaut pour les interfaces
-    window.setView(window.getDefaultView());
-
-    // Interface ImGui
-    uiManager.RenderMainMenu(projectManager);
-
-    // Si une map est chargée, afficher les widgets
-    if (mapEditor.GetActiveMap())
-    {
-        uiManager.RenderLayerPanel(mapEditor.GetActiveMap()->GetLayers());
-        uiManager.RenderTileSelector(mapEditor.GetActiveMap(), mapEditor.GetActiveTilesets());
-    }
-
-    // Gestion des actions de menu (nouveau projet, sauvegarde, etc.)
-    uiManager.HandleMenuActions(projectManager);
-
     // Rendu final ImGui
     ImGui::SFML::Render(window);
+}
+
+void EditorState::RenderMainMenu()
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("Fichier"))
+        {
+            if (ImGui::MenuItem("Nouveau"))
+            {
+                createProjectPopupOpen = true;
+            }
+            if (ImGui::MenuItem("Ouvrir"))
+            {
+                const char* path = tinyfd_selectFolderDialog("Ouvrir un projet...", "../");
+                if (path)
+                    projectManager.LoadProject(std::string(path) + "/" + std::filesystem::path(path).stem().string() + ".json");
+            }
+            if (ImGui::MenuItem("Sauvegarder"))
+            {
+                std::filesystem::path path = projectManager.GetCurrentProject()->GetBasePath();
+                projectManager.SaveProject(path.string() + "/" + path.stem().string() + ".json");
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Affichage"))
+        {
+            ImGui::MenuItem("Selecteur de tuiles", nullptr, &showTileSelector);
+            ImGui::MenuItem("Calques", nullptr, &showLayersPanel);
+            ImGui::EndMenu();
+        }
+
+        if (createProjectPopupOpen)
+        {
+            ImGui::OpenPopup("Creer un nouveau projet");
+            createProjectPopupOpen = false;
+        }
+
+        if (ImGui::BeginPopupModal("Creer un nouveau projet", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (ImGui::Button("Creer"))
+            {
+                const char* pathChar = tinyfd_selectFolderDialog("Ouvrir un projet...", std::string("../").c_str());
+                if (pathChar)
+                {
+                    std::string path = pathChar;
+                    std::string name = std::filesystem::path(path).stem().string();
+
+                    if (!std::filesystem::exists(path))
+                        std::filesystem::create_directories(path);
+
+                    if (projectManager.CreateProject(name, path))
+                    {
+                        std::cout << "[UIManager] Projet cree : " << name << " a " << path << std::endl;
+                    }
+                    else
+                        std::cerr << "[UIManager] Echec de la creation du projet." << std::endl;
+
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Annuler"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::EndMainMenuBar();
+    }
+}
+
+void EditorState::RenderTileSelector()
+{
+    if (!showTileSelector) return;
+
+    std::vector<Tileset*>& tilesets = mapEditor.GetActiveMap()->GetTilesets();
+    const char* filters[] = { "*.png", "*.jpeg", "*.jpg" };
+
+    ImGui::Begin("Selecteur de tuiles", &showTileSelector);
+
+    if (tilesets.size() != 0)
+    {
+        if (tilesets.size() > 1)
+        {
+            ImGui::Text("TilesetID");
+            ImGui::SameLine();
+            ImGui::SliderInt("##TilesetID", &mapEditor.GetActiveTilesets(), 0, (int)tilesets.size() - 1);
+        }
+
+        Tileset* currentTileset = tilesets[mapEditor.GetActiveTilesets()];
+
+        const sf::Texture& tex = currentTileset->GetTexture();
+        const sf::Vector2i& tileSize = currentTileset->GetTileSize();
+
+        sf::Vector2f tileButtonSize(tileSize);
+        int columns = tex.getSize().x / tileSize.x;
+        int rows = tex.getSize().y / tileSize.y;
+
+        ImGui::Text("Tileset : %s", currentTileset->GetPath().c_str());
+        ImGui::Separator();
+
+        // Utiliser ImGui::ImageButton pour chaque tile
+        sf::Sprite sprt(tex);
+        for (int y = 0; y < rows; ++y)
+        {
+            for (int x = 0; x < columns; ++x)
+            {
+                int id = y * columns + x;
+
+                sf::IntRect rect = currentTileset->GetTileTextureRect(id);
+                sprt.setTextureRect(rect);
+                
+                if (ImGui::ImageButton(std::string("##Tile" + std::to_string(id)).c_str(), sprt, tileButtonSize))
+                {
+                    selectedTileID = id;
+                }
+
+                if (x < columns - 1)
+                    ImGui::SameLine(0.f, 0.15f);
+            }
+        }
+        ImGui::Separator();
+    }
+    if (ImGui::Button("Create"))
+    {
+        ImGui::OpenPopup("New Tileset");
+    }
+    if (tilesets.size() > 1)
+    {
+        ImGui::SameLine();
+        if (ImGui::Button("Delete"))
+        {
+            mapEditor.DeleteTileset(mapEditor.GetActiveTilesets());
+        }
+    }
+
+    if (ImGui::BeginPopupModal("New Tileset"))
+    {
+        ImGui::Text("Tile Size : ");
+        ImGui::InputInt2("##tileSize", tileSize, ImGuiInputTextFlags_AutoSelectAll);
+
+        if (ImGui::Button("Create"))
+        {
+            const char* path = tinyfd_openFileDialog("Ouvrir une tileset...", "../", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
+            if (path)
+            {
+                std::string strPath = path;
+                mapEditor.LoadTileset(strPath, { tileSize[0], tileSize[1] });
+                ImGui::CloseCurrentPopup();
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    ImGui::End();
+}
+
+void EditorState::RenderLayerPanel()
+{
+    if (!showLayersPanel) return;
+
+    std::vector<Layer>& layers = mapEditor.GetActiveMap()->GetLayers();
+
+    ImGui::Begin("Calques", &showLayersPanel);
+
+    for (size_t i = 0; i < layers.size(); ++i)
+    {
+        Layer& layer = layers[i];
+        std::string label = layer.GetName() + "##" + std::to_string(i);
+
+        bool visible = layer.IsVisible();
+        if (ImGui::Checkbox(label.c_str(), &visible))
+        {
+            layer.SetVisible(visible);
+        }
+
+        if (ImGui::IsItemClicked())
+        {
+            selectedLayer = (int)(i);
+        }
+    }
+    ImGui::End();
 }

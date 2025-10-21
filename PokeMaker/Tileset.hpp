@@ -9,7 +9,7 @@ class Tileset {
 public:
     Tileset();
 
-    bool LoadFromFile(const std::string& path);
+    bool LoadFromFile(const std::string& path, const sf::Vector2i& tileSize = { 0,0 });
     sf::IntRect GetTileTextureRect(int id) const;
 
     json Serialize() const;

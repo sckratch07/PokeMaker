@@ -76,7 +76,7 @@ json Layer::Serialize() const
     return j;
 }
 
-void Layer::Deserialize(const json& jsonData)
+void Layer::Deserialize(const json& jsonData, std::vector<Tileset*> tilesets)
 {
     name = jsonData.value("name", "");
     id = jsonData.value("id", 0);
@@ -92,7 +92,7 @@ void Layer::Deserialize(const json& jsonData)
             for (const auto& tileJson : rowJson)
             {
                 Tile tile;
-                tile.Deserialize(tileJson);
+                tile.Deserialize(tileJson, tilesets);
                 row.push_back(tile);
             }
             tiles.push_back(row);

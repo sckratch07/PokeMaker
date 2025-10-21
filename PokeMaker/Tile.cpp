@@ -1,8 +1,8 @@
 #include "Tile.hpp"
 
-Tile::Tile() : sprite({32, 32}), position(0, 0), textureRect({0, 0}, {32, 32}), collidable(false), layerIndex(0), tilesetIndex(0) {}
+Tile::Tile() : sprite({0, 0}), position(0, 0), textureRect({0, 0}, {0, 0}), collidable(false), tilesetIndex(-1) {}
 
-Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRect& rect, int layer, int tileset) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), layerIndex(layer), tilesetIndex(tileset)
+Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRect& rect, int tileset) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), tilesetIndex(tileset)
 {
     sprite.setPosition({ (float)pos.x, (float)pos.y });
     sprite.setTexture(&texture);
@@ -11,14 +11,8 @@ Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRec
 
 void Tile::Draw(sf::RenderWindow& window)
 {
-    window.draw(sprite);
-}
-
-void Tile::SetTransparency(uint8_t alpha)
-{
-    sf::Color c = sprite.getFillColor();
-    c.a = alpha;
-    sprite.setFillColor(c);
+    if (tilesetIndex >= 0)
+        window.draw(sprite);
 }
 
 json Tile::Serialize() const
@@ -27,11 +21,11 @@ json Tile::Serialize() const
     j["position"] = { position.x, position.y };
     j["textureRect"] = { textureRect.position.x, textureRect.position.y, textureRect.size.x, textureRect.size.y };
     j["collidable"] = collidable;
-    j["layerIndex"] = layerIndex;
+    j["tilesetIndex"] = tilesetIndex;
     return j;
 }
 
-void Tile::Deserialize(const json& jsonData)
+void Tile::Deserialize(const json& jsonData, std::vector<Tileset*> tilesets)
 {
     if (jsonData.contains("position") && jsonData["position"].is_array()) {
         position.x = jsonData["position"][0];
@@ -43,10 +37,11 @@ void Tile::Deserialize(const json& jsonData)
         textureRect.size.x = jsonData["textureRect"][2];
         textureRect.size.y = jsonData["textureRect"][3];
     }
-    collidable = jsonData.value("collidable", false);
-    layerIndex = jsonData.value("layerIndex", 0);
+    collidable = jsonData["collidable"];
+    tilesetIndex = jsonData["tilesetIndex"];
 
     sprite.setSize(sf::Vector2f(textureRect.size));
     sprite.setPosition({ (float)position.x, (float)position.y });
+    sprite.setTexture(&tilesets[tilesetIndex]->GetTexture());
     sprite.setTextureRect(textureRect);
 }

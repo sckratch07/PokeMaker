@@ -155,7 +155,6 @@
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tileset.cpp" />
-    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig-SFML.h" />
@@ -180,7 +179,6 @@
     <ClInclude Include="ProjectManager.hpp" />
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="Tileset.hpp" />
-    <ClInclude Include="UIManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

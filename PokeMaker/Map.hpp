@@ -1,12 +1,6 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <SFML/Graphics.hpp>
 #include "Layer.hpp"
 #include "Tileset.hpp"
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
 
 class Map {
 public:
@@ -19,8 +13,8 @@ public:
     json Serialize() const;
     void Deserialize(const json& jsonData);
 
-    void AddTileset(const Tileset& tileset);
-    std::vector<Tileset>& GetTilesets() { return tilesets; }
+    void AddTileset(Tileset* tileset);
+    std::vector<Tileset*>& GetTilesets() { return tilesets; }
 
     // Accesseurs
     inline Layer& GetLayer(int id) { return layers.at(id); };
@@ -34,5 +28,5 @@ private:
     sf::Vector2i size; // taille en tiles
     sf::Vector2i tileSize; // taille d’une tuile en pixels
     std::vector<Layer> layers;
-    std::vector<Tileset> tilesets;
+    std::vector<Tileset*> tilesets;
 };

@@ -70,9 +70,6 @@
     <ClCompile Include="MapEditor.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Project.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -140,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="MapEditor.hpp">
       <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="UIManager.hpp">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Project.hpp">
       <Filter>Core</Filter>

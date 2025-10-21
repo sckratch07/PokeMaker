@@ -1,5 +1,4 @@
 #include "Camera.hpp"
-#include <SFML/Window/Keyboard.hpp>
 
 Camera::Camera() : moveSpeed(300.f), zoomLevel(1.f)
 {

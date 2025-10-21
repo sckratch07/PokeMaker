@@ -10,7 +10,7 @@ void Map::AddLayer(const std::string& layerName)
     layers.emplace_back(layerName, id, GetSize());
 }
 
-void Map::AddTileset(const Tileset& tileset)
+void Map::AddTileset(Tileset* tileset)
 {
     tilesets.push_back(tileset);
 }
@@ -29,14 +29,14 @@ json Map::Serialize() const
     j["size"] = { size.x, size.y };
     j["tileSize"] = { tileSize.x, tileSize.y };
 
+    j["tilesets"] = json::array();
+    for (const auto& tileset : tilesets) {
+        j["tilesets"].push_back(tileset->Serialize());
+    }
+
     j["layers"] = json::array();
     for (const auto& layer : layers) {
         j["layers"].push_back(layer.Serialize());
-    }
-
-    j["tilesets"] = json::array();
-    for (const auto& tileset : tilesets) {
-        j["tilesets"].push_back(tileset.Serialize());
     }
 
     return j;
@@ -55,20 +55,22 @@ void Map::Deserialize(const json& jsonData)
         tileSize.y = jsonData["tileSize"][1];
     }
 
+    for (Tileset* tileset : tilesets) { delete tileset; }
+    tilesets.clear();
+    if (jsonData.contains("tilesets") && jsonData["tilesets"].is_array()) {
+        for (const auto& tilesetJson : jsonData["tilesets"]) {
+            Tileset* tileset = new Tileset;
+            tileset->Deserialize(tilesetJson);
+            tilesets.push_back(tileset);
+        }
+    }
+
     layers.clear();
     if (jsonData.contains("layers") && jsonData["layers"].is_array()) {
         for (const auto& layerJson : jsonData["layers"]) {
             Layer layer;
-            layer.Deserialize(layerJson);
+            layer.Deserialize(layerJson, tilesets);
             layers.push_back(layer);
-        }
-    }
-
-    if (jsonData.contains("tilesets") && jsonData["tilesets"].is_array()) {
-        for (const auto& tilesetJson : jsonData["tilesets"]) {
-            Tileset tileset;
-            tileset.Deserialize(tilesetJson);
-            tilesets.push_back(tileset);
         }
     }
 }

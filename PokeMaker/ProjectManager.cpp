@@ -1,10 +1,7 @@
 #include "ProjectManager.hpp"
 #include <fstream>
-#include <filesystem>
-#include <iostream>
 
 namespace fs = std::filesystem;
-using json = nlohmann::json;
 
 bool ProjectManager::CreateProject(const std::string& name, const std::string& path)
 {
@@ -16,8 +13,10 @@ bool ProjectManager::CreateProject(const std::string& name, const std::string& p
 
         currentProject = Project(name, path);
 
+        newProject = true;
+
         // Création d’un fichier de base du projet (vide au début)
-        return SaveProject(path + (char)92 + name + ".json");
+        return SaveProject(path + static_cast<char>(92) + name + ".json");
     }
     catch (const std::exception& e) {
         std::cerr << "[ProjectManager] Erreur lors de la creation du projet : " << e.what() << std::endl;
@@ -39,6 +38,8 @@ bool ProjectManager::LoadProject(const std::string& path)
         file.close();
 
         currentProject.Deserialize(data);
+
+        newProject = true;
 
         std::cout << "[ProjectManager] Projet charge depuis " << path << std::endl;
         return true;
@@ -71,9 +72,4 @@ bool ProjectManager::SaveProject(const std::string& path)
         std::cerr << "[ProjectManager] Erreur lors de la sauvegarde : " << e.what() << std::endl;
         return false;
     }
-}
-
-Project* ProjectManager::GetCurrentProject()
-{
-    return &currentProject;
 }

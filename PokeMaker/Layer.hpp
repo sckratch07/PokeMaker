@@ -1,11 +1,5 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <SFML/Graphics.hpp>
 #include "Tile.hpp"
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
 
 class Layer {
 public:
@@ -19,7 +13,7 @@ public:
     void Clear();
 
     json Serialize() const;
-    void Deserialize(const json& jsonData);
+    void Deserialize(const json& jsonData, std::vector<Tileset*> tilesets);
 
     // Accesseurs
     const std::string& GetName() const { return name; }

@@ -3,7 +3,7 @@
 
 Tileset::Tileset() : path(""), tileSize(32, 32), columns(0), rows(0) {}
 
-bool Tileset::LoadFromFile(const std::string& path)
+bool Tileset::LoadFromFile(const std::string& path, const sf::Vector2i& tileSize)
 {
     if (!texture.loadFromFile(path)) {
         std::cerr << "[Tileset] Impossible de charger la texture : " << path << std::endl;
@@ -11,6 +11,7 @@ bool Tileset::LoadFromFile(const std::string& path)
     }
 
     this->path = path;
+    this->tileSize = tileSize;
 
     // Calcul des colonnes et lignes en fonction de la taille de la texture
     if (tileSize.x > 0 && tileSize.y > 0) {
@@ -47,6 +48,7 @@ void Tileset::Deserialize(const json& jsonData)
         tileSize.x = jsonData["tileSize"][0];
         tileSize.y = jsonData["tileSize"][1];
     }
+
     columns = jsonData.value("columns", 0);
     rows = jsonData.value("rows", 0);
 

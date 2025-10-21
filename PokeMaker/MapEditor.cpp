@@ -1,5 +1,4 @@
 #include "MapEditor.hpp"
-#include <iostream>
 
 MapEditor::~MapEditor()
 {
@@ -10,9 +9,8 @@ void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const 
 {
     Project* currentProject = projectManager.GetCurrentProject();
 
-    if (activeMap) delete activeMap;
     activeMap = new Map(name, size, tileSize);
-    currentProject->AddMap(*activeMap);
+    currentProject->AddMap(activeMap);
     activeMap->AddLayer("Layer 0");
 
     std::cout << "[MapEditor] Nouvelle map : " << name << std::endl;
@@ -27,23 +25,48 @@ void MapEditor::LoadMap(const std::string& name, ProjectManager& projectManager)
     std::cout << "[MapEditor] Chargement de la map : " << name << std::endl;
 }
 
-void MapEditor::LoadTileset(std::string path, const sf::Vector2i& tileSize)
+void MapEditor::LoadTileset(std::string& path, const sf::Vector2i& tileSize)
 {
     if (!activeMap) return;
     
-    Tileset newTileset;
-    if (newTileset.LoadFromFile(path)) {
-        newTileset.Deserialize({ {"tileSize", {tileSize.x, tileSize.y}} });
+    Tileset* newTileset = new Tileset;
+    if (newTileset->LoadFromFile(path, tileSize)) {
         activeMap->AddTileset(newTileset);
         activeTilesetIndex = static_cast<int>(activeMap->GetTilesets().size() - 1);
-        std::cout << "[MapEditor] Tileset ajouté : " << path << std::endl;
+        std::cout << "[MapEditor] Tileset ajoute : " << path << std::endl;
     }
 }
 
 void MapEditor::DeleteTileset(int id)
 {
-    std::swap(activeMap->GetTilesets()[id], activeMap->GetTilesets().back());
-    activeMap->GetTilesets().pop_back();
+    std::vector<Tileset*>& tilesets = activeMap->GetTilesets();
+    if (id < 0 || id >= tilesets.size()) return;
+
+    for (Layer& layer : activeMap->GetLayers())
+    {
+        for (std::vector<Tile>& tiles : layer.GetTiles())
+        {
+            for (Tile& tile : tiles)
+            {
+                if (tile.GetTilesetId() == id)
+                    layer.SetTile(tile.GetPosition().x, tile.GetPosition().y, Tile());
+                else
+                    tile.SetTilesetId(std::max(tile.GetTilesetId() - 1, 0));
+            }
+        }
+    }
+
+    if (id != tilesets.size() - 1)
+    {
+        for (int i = id; i < tilesets.size() - 1; i++)
+        {
+            std::swap(tilesets[id], tilesets[id + 1]);
+        }
+    }
+
+    delete tilesets.back();
+    tilesets.pop_back();
+    activeTilesetIndex = std::max(activeTilesetIndex--, 0);
 }
 
 void MapEditor::Render(sf::RenderWindow& window)
@@ -54,51 +77,43 @@ void MapEditor::Render(sf::RenderWindow& window)
     DrawGrid(window);
 }
 
-void MapEditor::Update(float dt, sf::RenderWindow& window, UIManager& uiManager, Camera& camera)
+void MapEditor::Update(float dt, sf::RenderWindow& window, int selectedTile, int selectedLayer, Camera& camera)
 {
-    if (!activeMap || !activeMap->GetTilesets().empty()) return;
+    if (!activeMap || activeMap->GetTilesets().empty()) return;
 
     // Conversion de la position souris en coordonnées map
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, camera.GetView());
     sf::Vector2i tilePos(
         static_cast<int>(worldPos.x / activeMap->GetTileSize().x),
-        static_cast<int>(worldPos.y / activeMap->GetTileSize().y)
-    );
-
-    int selectedTileID = uiManager.GetSelectedTileID();
-    int selectedLayerIndex = uiManager.GetSelectedLayer();
+        static_cast<int>(worldPos.y / activeMap->GetTileSize().y));
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) &&
-        selectedTileID >= 0 && tilePos.x >= 0 && tilePos.y >= 0)
+        selectedTile >= 0 && tilePos.x >= 0 && tilePos.y >= 0)
     {
 
-        if (selectedLayerIndex < activeMap->GetLayers().size())
+        if (selectedLayer < activeMap->GetLayers().size())
         {
-            Layer& layer = activeMap->GetLayer(selectedLayerIndex);
+            Layer& layer = activeMap->GetLayer(selectedLayer);
 
-            sf::IntRect texRect = activeMap->GetTilesets()[activeTilesetIndex].GetTileTextureRect(selectedTileID);
+            sf::IntRect texRect = activeMap->GetTilesets()[activeTilesetIndex]->GetTileTextureRect(selectedTile);
             Tile newTile(
                 sf::Vector2i(tilePos.x * activeMap->GetTileSize().x, tilePos.y * activeMap->GetTileSize().y),
-                activeMap->GetTilesets()[activeTilesetIndex].GetTexture(), texRect, false
+                activeMap->GetTilesets()[activeTilesetIndex]->GetTexture(), texRect, activeTilesetIndex
             );
 
-            // Affecter la texture à la tuile
-            newTile.SetTransparency(255);
             layer.SetTile(tilePos.x, tilePos.y, newTile);
         }
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) &&
-        selectedTileID >= 0 && tilePos.x >= 0 && tilePos.y >= 0)
+        selectedTile >= 0 && tilePos.x >= 0 && tilePos.y >= 0)
     {
-        Layer& layer = activeMap->GetLayer(selectedLayerIndex);
+        Layer& layer = activeMap->GetLayer(selectedLayer);
 
         Tile newTile(
-            sf::Vector2i(0, 0), activeMap->GetTilesets()[activeTilesetIndex].GetTexture(), {{0, 0}, {0, 0}}, false
+            sf::Vector2i(0, 0), activeMap->GetTilesets()[activeTilesetIndex]->GetTexture(), {{0, 0}, {0, 0}}, 0
         );
 
-        // Affecter la texture à la tuile
-        newTile.SetTransparency(255);
         layer.SetTile(tilePos.x, tilePos.y, newTile);
     }
 }
@@ -110,22 +125,20 @@ void MapEditor::DrawGrid(sf::RenderWindow& window)
     sf::Vector2i size = activeMap->GetSize();
     sf::Vector2i tileSize = activeMap->GetTileSize();
 
-    sf::Vector2f center(window.getSize().x * 0.5f, window.getSize().y * 0.5f);
-
     sf::VertexArray lines(sf::PrimitiveType::Lines);
 
     // Lignes verticales
     for (int x = 0; x <= size.x; ++x)
     {
-        lines.append(sf::Vertex(sf::Vector2f((float)x * tileSize.x, 0.f) - center, sf::Color(150, 150, 150)));
-        lines.append(sf::Vertex(sf::Vector2f((float)(x * tileSize.x), (float)(size.y * tileSize.y)) - center, sf::Color(150, 150, 150)));
+        lines.append(sf::Vertex(sf::Vector2f((float)x * tileSize.x, 0.f), sf::Color(150, 150, 150)));
+        lines.append(sf::Vertex(sf::Vector2f((float)(x * tileSize.x), (float)(size.y * tileSize.y)), sf::Color(150, 150, 150)));
     }
 
     // Lignes horizontales
     for (int y = 0; y <= size.y; ++y)
     {
-        lines.append(sf::Vertex(sf::Vector2f(0.f, (float)y * tileSize.y) - center, sf::Color(150, 150, 150)));
-        lines.append(sf::Vertex(sf::Vector2f((float)(size.x * tileSize.x), (float)(y * tileSize.y)) - center, sf::Color(150, 150, 150)));
+        lines.append(sf::Vertex(sf::Vector2f(0.f, (float)y * tileSize.y), sf::Color(150, 150, 150)));
+        lines.append(sf::Vertex(sf::Vector2f((float)(size.x * tileSize.x), (float)(y * tileSize.y)), sf::Color(150, 150, 150)));
     }
 
     window.draw(lines);
