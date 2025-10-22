@@ -2,7 +2,7 @@
 #include "tinyfiledialogs.h"
 #include <iostream>
 
-EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLayer(0), selectedTileID(0), tileSize(32,32) {}
+EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLayer(0), selectedTileID(0), tileSize(32,32), nameLayer("\n") {}
 
 void EditorState::Init()
 {
@@ -25,7 +25,17 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
     mapEditor.Update(dt, window, selectedTileID, selectedLayer, camera);
 
     // Interface ImGui
-    RenderMainMenu();
+    ImGui::SetNextWindowPos({ 0,0 });
+    ImGui::SetNextWindowSize({ static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
+    if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus |
+        ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_MenuBar))
+    {
+        ImGui::DockSpace(ImGui::GetID("DockSpace"), { 0,0 }, ImGuiDockNodeFlags_PassthruCentralNode);
+        RenderMainMenu();
+    }
+    ImGui::End();
 
     // Si une map est chargée, afficher les widgets
     if (activeProject)
@@ -220,24 +230,71 @@ void EditorState::RenderLayerPanel()
 {
     if (!showLayersPanel) return;
 
-    std::vector<Layer>& layers = mapEditor.GetActiveMap()->GetLayers();
 
-    ImGui::Begin("Calques", &showLayersPanel);
-
-    for (size_t i = 0; i < layers.size(); ++i)
+    if (ImGui::Begin("Layers", &showLayersPanel))
     {
-        Layer& layer = layers[i];
-        std::string label = layer.GetName() + "##" + std::to_string(i);
-
-        bool visible = layer.IsVisible();
-        if (ImGui::Checkbox(label.c_str(), &visible))
+        std::vector<Layer>& layers = mapEditor.GetActiveMap()->GetLayers();
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        for (size_t i = 0; i < layers.size(); ++i)
         {
-            layer.SetVisible(visible);
+            Layer& layer = layers[i];
+            std::string label = "##" + std::to_string(i);
+
+            bool visible = layer.IsVisible();
+            if (ImGui::Checkbox(label.c_str(), &visible))
+            {
+                layer.SetVisible(visible);
+            }
+            ImGui::SameLine();
+            ImVec2 startCursor(ImGui::GetCursorScreenPos());
+            ImGui::Text(layer.GetName().c_str());
+
+            if (layer.GetID() == selectedLayer)
+            {
+                ImVec2 textSize = ImGui::CalcTextSize(layer.GetName().c_str());
+                ImVec2 endCursor(startCursor.x + textSize.x, startCursor.y + textSize.y);
+
+                startCursor.x -= 2.0f;
+                startCursor.y += 2.0f;
+                endCursor.x += 6.0f;
+                endCursor.y += 6.0f;
+
+                drawList->AddRect(startCursor, endCursor, IM_COL32(90, 160, 255, 220), 2.f, ImDrawFlags_RoundCornersAll);
+            }
+
+            if (ImGui::IsItemClicked())
+            {
+                selectedLayer = static_cast<int>(i);
+            }
+
         }
 
-        if (ImGui::IsItemClicked())
+        if (ImGui::Button("Add Layer"))
         {
-            selectedLayer = (int)(i);
+            ImGui::OpenPopup("New Layer");
+        }
+
+        if (ImGui::Button("Delete Layer"))
+        {
+            mapEditor.DeleteLayer(selectedLayer);
+            selectedLayer = std::max(selectedLayer - 1, 0);
+        }
+
+        if (ImGui::BeginPopupModal("New Layer"))
+        {
+            ImGui::Text("Layer Name : ");
+            ImGui::SameLine();
+            ImGui::InputText("##", nameLayer, 50, ImGuiInputTextFlags_AutoSelectAll);
+
+            if (ImGui::Button("Create"))
+            {
+                mapEditor.GetActiveMap()->AddLayer(nameLayer);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel"))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
         }
     }
     ImGui::End();

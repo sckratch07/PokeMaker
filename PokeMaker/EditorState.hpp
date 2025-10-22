@@ -33,6 +33,7 @@ private:
     int selectedLayer;
 
     int tileSize[2];
+    char nameLayer[50];
 
     bool createProjectPopupOpen = false;
 };

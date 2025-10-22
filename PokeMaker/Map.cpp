@@ -6,8 +6,14 @@ Map::Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& 
 
 void Map::AddLayer(const std::string& layerName)
 {
-    int id = static_cast<int>(layers.size());
-    layers.emplace_back(layerName, id, GetSize());
+    int id = 0;
+    for (Layer layer : layers)
+    {
+        if (id != layer.GetID())
+            continue;
+        id++;
+    }
+    layers.push_back(Layer(layerName, id, size));
 }
 
 void Map::AddTileset(Tileset* tileset)
@@ -17,7 +23,8 @@ void Map::AddTileset(Tileset* tileset)
 
 void Map::Render(sf::RenderWindow& window)
 {
-    for (auto& layer : layers) {
+    for (auto& layer : layers)
+    {
         layer.Render(window);
     }
 }

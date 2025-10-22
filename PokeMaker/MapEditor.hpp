@@ -12,6 +12,7 @@ public:
 
     void LoadTileset(std::string& path, const sf::Vector2i& tileSize);
     void DeleteTileset(int id);
+    void DeleteLayer(int id);
 
     void Render(sf::RenderWindow& window);
     void Update(float dt, sf::RenderWindow& window, int selectedTile, int selectedLayer, Camera& camera);

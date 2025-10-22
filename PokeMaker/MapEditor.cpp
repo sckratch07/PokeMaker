@@ -69,6 +69,19 @@ void MapEditor::DeleteTileset(int id)
     activeTilesetIndex = std::max(activeTilesetIndex--, 0);
 }
 
+void MapEditor::DeleteLayer(int id)
+{
+    std::vector<Layer>& layers = activeMap->GetLayers();
+    if (id != layers.size() - 1)
+    {
+        for (int i = id; i < layers.size() - 1; i++)
+        {
+            std::swap(layers[id], layers[id + 1]);
+        }
+    }
+    layers.pop_back();
+}
+
 void MapEditor::Render(sf::RenderWindow& window)
 {
     if (!activeMap) return;

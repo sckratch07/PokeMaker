@@ -40,8 +40,11 @@ void Tile::Deserialize(const json& jsonData, std::vector<Tileset*> tilesets)
     collidable = jsonData["collidable"];
     tilesetIndex = jsonData["tilesetIndex"];
 
-    sprite.setSize(sf::Vector2f(textureRect.size));
-    sprite.setPosition({ (float)position.x, (float)position.y });
-    sprite.setTexture(&tilesets[tilesetIndex]->GetTexture());
-    sprite.setTextureRect(textureRect);
+    if (tilesetIndex >= 0)
+    {
+        sprite.setSize(sf::Vector2f(textureRect.size));
+        sprite.setPosition({ (float)position.x, (float)position.y });
+        sprite.setTextureRect(textureRect);
+        sprite.setTexture(&tilesets[tilesetIndex]->GetTexture());
+    }
 }

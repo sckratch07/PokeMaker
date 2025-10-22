@@ -7,9 +7,11 @@ bool ProjectManager::CreateProject(const std::string& name, const std::string& p
 {
     try {
         // Création du répertoire de base du projet
-        if (!fs::exists(path)) {
+        if (!fs::exists(path))
+        {
             fs::create_directories(path);
         }
+        fs::create_directories(path + "/assets");
 
         currentProject = Project(name, path);
 
