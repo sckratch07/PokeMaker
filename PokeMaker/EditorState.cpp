@@ -230,7 +230,6 @@ void EditorState::RenderLayerPanel()
 {
     if (!showLayersPanel) return;
 
-
     if (ImGui::Begin("Layers", &showLayersPanel))
     {
         std::vector<Layer>& layers = mapEditor.GetActiveMap()->GetLayers();
