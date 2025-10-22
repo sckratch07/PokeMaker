@@ -49,7 +49,7 @@ void MapEditor::DeleteTileset(int id)
             for (Tile& tile : tiles)
             {
                 if (tile.GetTilesetId() == id)
-                    layer.SetTile(tile.GetPosition().x, tile.GetPosition().y, Tile());
+                    layer.SetTile(tile.GetPosition().x / tile.GetSize().x, tile.GetPosition().y / tile.GetSize().y,  Tile());
                 else
                     tile.SetTilesetId(std::max(tile.GetTilesetId() - 1, 0));
             }
