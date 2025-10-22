@@ -19,6 +19,9 @@
     <Filter Include="Extern\tinyfiledialogs">
       <UniqueIdentifier>{af120b7a-631f-4ada-8d4d-a6e37cfbcf52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ressources">
+      <UniqueIdentifier>{ce4061eb-47f4-4b50-a844-21ef7362d045}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\ImGui\imgui.cpp">
@@ -141,5 +144,15 @@
     <ClInclude Include="Project.hpp">
       <Filter>Core</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ressources.rc">
+      <Filter>Ressources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico">
+      <Filter>Ressources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

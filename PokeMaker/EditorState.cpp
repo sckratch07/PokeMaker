@@ -1,6 +1,7 @@
 ﻿#include "EditorState.hpp"
 #include "tinyfiledialogs.h"
 #include <iostream>
+#include <fstream>
 
 EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLayer(0), selectedTileID(0), tileSize(32,32), nameLayer("\n") {}
 
@@ -10,8 +11,6 @@ void EditorState::Init()
     projectManager = ProjectManager();
     mapEditor = MapEditor();
     camera = Camera();
-
-    std::cout << "[EditorState] Initialise." << std::endl;
 }
 
 void EditorState::HandleEvent(std::optional<sf::Event>& event)
@@ -49,7 +48,7 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
         activeProject = projectManager.GetCurrentProject();
 
         if (activeProject->GetMaps().size() == 0)
-            mapEditor.NewMap("Default", { 1, 2 }, { 32, 32 }, projectManager);
+            mapEditor.NewMap("Default", { 10, 10 }, { 32, 32 }, projectManager);
         else
             mapEditor.SetActiveMap(activeProject->GetMap("Default"));
 
@@ -73,19 +72,19 @@ void EditorState::RenderMainMenu()
 {
     if (ImGui::BeginMainMenuBar())
     {
-        if (ImGui::BeginMenu("Fichier"))
+        if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Nouveau"))
+            if (ImGui::MenuItem("New"))
             {
                 createProjectPopupOpen = true;
             }
-            if (ImGui::MenuItem("Ouvrir"))
+            if (ImGui::MenuItem("Open"))
             {
-                const char* path = tinyfd_selectFolderDialog("Ouvrir un projet...", "../");
+                const char* path = tinyfd_selectFolderDialog("Open projet...", "..");
                 if (path)
                     projectManager.LoadProject(std::string(path) + "/" + std::filesystem::path(path).stem().string() + ".json");
             }
-            if (ImGui::MenuItem("Sauvegarder"))
+            if (ImGui::MenuItem("Save"))
             {
                 std::filesystem::path path = projectManager.GetCurrentProject()->GetBasePath();
                 projectManager.SaveProject(path.string() + "/" + path.stem().string() + ".json");
@@ -93,24 +92,24 @@ void EditorState::RenderMainMenu()
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("Affichage"))
+        if (ImGui::BeginMenu("Display"))
         {
-            ImGui::MenuItem("Selecteur de tuiles", nullptr, &showTileSelector);
-            ImGui::MenuItem("Calques", nullptr, &showLayersPanel);
+            ImGui::MenuItem("Tile Selector", nullptr, &showTileSelector);
+            ImGui::MenuItem("Layers Panel", nullptr, &showLayersPanel);
             ImGui::EndMenu();
         }
 
         if (createProjectPopupOpen)
         {
-            ImGui::OpenPopup("Creer un nouveau projet");
+            ImGui::OpenPopup("Create new project");
             createProjectPopupOpen = false;
         }
 
-        if (ImGui::BeginPopupModal("Creer un nouveau projet", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::BeginPopupModal("Create new project", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            if (ImGui::Button("Creer"))
+            if (ImGui::Button("Create"))
             {
-                const char* pathChar = tinyfd_selectFolderDialog("Ouvrir un projet...", std::string("../").c_str());
+                const char* pathChar = tinyfd_selectFolderDialog("Create projet...", "..");
                 if (pathChar)
                 {
                     std::string path = pathChar;
@@ -119,21 +118,15 @@ void EditorState::RenderMainMenu()
                     if (!std::filesystem::exists(path))
                         std::filesystem::create_directories(path);
 
-                    if (projectManager.CreateProject(name, path))
-                    {
-                        std::cout << "[UIManager] Projet cree : " << name << " a " << path << std::endl;
-                    }
-                    else
-                        std::cerr << "[UIManager] Echec de la creation du projet." << std::endl;
+                    if (!projectManager.CreateProject(name, path))
+                        std::cerr << "[Error] Couldn't create new project..." << std::endl;
 
                     ImGui::CloseCurrentPopup();
                 }
             }
             ImGui::SameLine();
-            if (ImGui::Button("Annuler"))
-            {
+            if (ImGui::Button("Cancel"))
                 ImGui::CloseCurrentPopup();
-            }
             ImGui::EndPopup();
         }
         ImGui::EndMainMenuBar();
@@ -147,15 +140,30 @@ void EditorState::RenderTileSelector()
     std::vector<Tileset*>& tilesets = mapEditor.GetActiveMap()->GetTilesets();
     const char* filters[] = { "*.png", "*.jpeg", "*.jpg" };
 
-    ImGui::Begin("Selecteur de tuiles", &showTileSelector);
+    ImGui::Begin("Tile Selector", &showTileSelector);
 
     if (tilesets.size() != 0)
     {
         if (tilesets.size() > 1)
         {
-            ImGui::Text("TilesetID");
-            ImGui::SameLine();
-            ImGui::SliderInt("##TilesetID", &mapEditor.GetActiveTilesets(), 0, (int)tilesets.size() - 1);
+            if (ImGui::BeginChild("Tileset List Selector", ImVec2(0, 0), ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
+                ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground |
+                ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove))
+            {
+                for (int i = 0; i < tilesets.size(); i++)
+                {
+                    ImGui::PushID(i);
+
+                    if (ImGui::Selectable(std::filesystem::path(tilesets[i]->GetPath()).filename().string().c_str(), mapEditor.GetActiveTilesets() == i))
+                    {
+                        mapEditor.GetActiveTilesets() = i;
+                    }
+
+                    ImGui::PopID();
+                }
+            }
+            ImGui::EndChild();
+            ImGui::Separator();
         }
 
         Tileset* currentTileset = tilesets[mapEditor.GetActiveTilesets()];
@@ -167,8 +175,6 @@ void EditorState::RenderTileSelector()
         int columns = tex.getSize().x / tileSize.x;
         int rows = tex.getSize().y / tileSize.y;
 
-        ImGui::Text("Tileset : %s", currentTileset->GetPath().c_str());
-        ImGui::Separator();
 
         // Utiliser ImGui::ImageButton pour chaque tile
         sf::Sprite sprt(tex);
@@ -212,11 +218,11 @@ void EditorState::RenderTileSelector()
 
         if (ImGui::Button("Create"))
         {
-            const char* path = tinyfd_openFileDialog("Ouvrir une tileset...", "../", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
+            const char* path = tinyfd_openFileDialog("Open tileset...", "..", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
             if (path)
             {
-                std::string strPath = path;
-                mapEditor.LoadTileset(strPath, { tileSize[0], tileSize[1] });
+                std::string strPath(path);
+                mapEditor.LoadTileset(strPath, {tileSize[0], tileSize[1]});
                 ImGui::CloseCurrentPopup();
             }
         }
@@ -259,7 +265,10 @@ void EditorState::RenderLayerPanel()
                 endCursor.y += 6.0f;
 
                 drawList->AddRect(startCursor, endCursor, IM_COL32(90, 160, 255, 220), 2.f, ImDrawFlags_RoundCornersAll);
+                layer.SetTransparency(255);
             }
+            else
+                layer.SetTransparency(95);
 
             if (ImGui::IsItemClicked())
             {

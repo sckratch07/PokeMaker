@@ -15,6 +15,8 @@ public:
     json Serialize() const;
     void Deserialize(const json& jsonData, std::vector<Tileset*> tilesets);
 
+    void SetTransparency(uint8_t alpha);
+
     // Accesseurs
     const std::string& GetName() const { return name; }
     int GetID() const { return id; }

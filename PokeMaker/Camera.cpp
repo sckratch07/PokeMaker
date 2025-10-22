@@ -5,10 +5,6 @@ Camera::Camera() : moveSpeed(300.f), zoomLevel(1.f)
     view = sf::View(sf::FloatRect({ -640.f, -360.f }, { 1280.f, 720.f })); // vue par défaut
 }
 
-Camera::~Camera()
-{
-}
-
 void Camera::HandleEvent(std::optional<sf::Event>& event)
 {
     // Zoom avec molette de souris
@@ -47,9 +43,4 @@ void Camera::Zoom(float factor)
 void Camera::Apply(sf::RenderWindow& window)
 {
     window.setView(view);
-}
-
-sf::Vector2f Camera::GetCenter() const
-{
-    return view.getCenter();
 }

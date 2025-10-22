@@ -1,9 +1,10 @@
-#include "App.hpp"
+ï»¿#include "App.hpp"
 
-App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), /*editorState(),*/ isRunning(true)
+App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editorState(), isRunning(true)
 {
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
+    window.setIcon(sf::Image("icon.png"));
 
     if (ImGui::SFML::Init(window))
     {
@@ -105,9 +106,9 @@ void App::Run()
         // Calcul du deltaTime
         deltaTime = clock.restart();
 
-        // Gestion des événements
+        // Gestion des Ã©vÃ©nements
         ProcessEvents();
-        // Mise à jour de la logique
+        // Mise Ã  jour de la logique
         Update(deltaTime);
         // Rendu
         Render();
@@ -128,7 +129,7 @@ void App::ProcessEvents()
             return;
         }
 
-        // Autres événements (touche, souris, redimensionnement...)
+        // Autres Ã©vÃ©nements (touche, souris, redimensionnement...)
         editorState.HandleEvent(event);
     }
 }
@@ -137,7 +138,7 @@ void App::Update(sf::Time& dt)
 {
     ImGui::SFML::Update(window, dt);
 
-    // Mise à jour de l'état de l'éditeur
+    // Mise Ã  jour de l'Ã©tat de l'Ã©diteur
     editorState.Update(dt.asSeconds(), window);
 }
 

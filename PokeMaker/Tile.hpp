@@ -11,6 +11,8 @@ public:
     json Serialize() const;
     void Deserialize(const json& jsonData, std::vector<Tileset*> tilesets);
 
+    void SetTransparency(uint8_t alpha);
+
     // Accesseurs
     const sf::Vector2i& GetPosition() const { return position; }
     const sf::Vector2i& GetSize() const { return textureRect.size; }

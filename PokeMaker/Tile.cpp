@@ -48,3 +48,10 @@ void Tile::Deserialize(const json& jsonData, std::vector<Tileset*> tilesets)
         sprite.setTexture(&tilesets[tilesetIndex]->GetTexture());
     }
 }
+
+void Tile::SetTransparency(uint8_t alpha)
+{
+    sf::Color tileColor = sprite.getFillColor();
+    tileColor.a = alpha;
+    sprite.setFillColor(tileColor);
+}

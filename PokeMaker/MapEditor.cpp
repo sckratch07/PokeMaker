@@ -30,7 +30,8 @@ void MapEditor::LoadTileset(std::string& path, const sf::Vector2i& tileSize)
     if (!activeMap) return;
     
     Tileset* newTileset = new Tileset;
-    if (newTileset->LoadFromFile(path, tileSize)) {
+    if (newTileset->LoadFromFile(path, tileSize))
+    {
         activeMap->AddTileset(newTileset);
         activeTilesetIndex = static_cast<int>(activeMap->GetTilesets().size() - 1);
         std::cout << "[MapEditor] Tileset ajoute : " << path << std::endl;

@@ -99,3 +99,14 @@ void Layer::Deserialize(const json& jsonData, std::vector<Tileset*> tilesets)
         }
     }
 }
+
+void Layer::SetTransparency(uint8_t alpha)
+{
+    for (std::vector<Tile>& tileY : tiles)
+    {
+        for (Tile& tileX : tileY)
+        {
+            tileX.SetTransparency(alpha);
+        }
+    }
+}
