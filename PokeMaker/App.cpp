@@ -1,4 +1,5 @@
 ﻿#include "App.hpp"
+#include "tinyfiledialogs.h"
 
 App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editorState(), isRunning(true)
 {
@@ -9,6 +10,7 @@ App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editor
     if (ImGui::SFML::Init(window))
     {
         ImGuiStyle& style = ImGui::GetStyle();
+        ImGuiIO& io = ImGui::GetIO();
         ImVec4* colors = style.Colors;
 
         // === COULEURS PRINCIPALES ===
@@ -87,6 +89,10 @@ App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editor
         style.ItemSpacing = ImVec2(6.0f, 4.0f);
         style.IndentSpacing = 20.0f;
         style.ScrollbarSize = 16.0f;
+
+        // === CONFIG ===
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     }
 
     editorState.Init();

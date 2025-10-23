@@ -28,8 +28,7 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
     ImGui::SetNextWindowSize({ static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus |
         ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration |
-        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_MenuBar))
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar))
     {
         ImGui::DockSpace(ImGui::GetID("DockSpace"), { 0,0 }, ImGuiDockNodeFlags_PassthruCentralNode);
         RenderMainMenu();
@@ -144,59 +143,76 @@ void EditorState::RenderTileSelector()
 
     if (tilesets.size() != 0)
     {
-        if (tilesets.size() > 1)
+        if (ImGui::BeginChild("Tileset List Selector", ImVec2(0, 0), ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
+            ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground |
+            ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove))
         {
-            if (ImGui::BeginChild("Tileset List Selector", ImVec2(0, 0), ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
-                ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground |
-                ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove))
+            for (int i = 0; i < tilesets.size(); i++)
             {
-                for (int i = 0; i < tilesets.size(); i++)
+                ImGui::PushID(i);
+
+                if (ImGui::Selectable(std::filesystem::path(tilesets[i]->GetPath()).filename().string().c_str(), mapEditor.GetActiveTilesets() == i))
                 {
-                    ImGui::PushID(i);
-
-                    if (ImGui::Selectable(std::filesystem::path(tilesets[i]->GetPath()).filename().string().c_str(), mapEditor.GetActiveTilesets() == i))
-                    {
-                        mapEditor.GetActiveTilesets() = i;
-                    }
-
-                    ImGui::PopID();
+                    mapEditor.GetActiveTilesets() = i;
                 }
+
+                ImGui::PopID();
             }
-            ImGui::EndChild();
-            ImGui::Separator();
         }
+        ImGui::EndChild();
 
         Tileset* currentTileset = tilesets[mapEditor.GetActiveTilesets()];
 
         const sf::Texture& tex = currentTileset->GetTexture();
+        const ImTextureRef texRef = static_cast<ImTextureRef>(static_cast<intptr_t>(tex.getNativeHandle()));
+        const sf::Vector2u texSize = tex.getSize();
         const sf::Vector2i& tileSize = currentTileset->GetTileSize();
 
         sf::Vector2f tileButtonSize(tileSize);
         int columns = tex.getSize().x / tileSize.x;
         int rows = tex.getSize().y / tileSize.y;
 
-
         // Utiliser ImGui::ImageButton pour chaque tile
-        sf::Sprite sprt(tex);
-        for (int y = 0; y < rows; ++y)
+        if (ImGui::BeginChild("Tileset List Selector", ImVec2(0, 0), ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground |
+            ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove))
         {
-            for (int x = 0; x < columns; ++x)
+            for (int y = 0; y < rows; ++y)
             {
-                int id = y * columns + x;
-
-                sf::IntRect rect = currentTileset->GetTileTextureRect(id);
-                sprt.setTextureRect(rect);
-                
-                if (ImGui::ImageButton(std::string("##Tile" + std::to_string(id)).c_str(), sprt, tileButtonSize))
+                for (int x = 0; x < columns; ++x)
                 {
-                    selectedTileID = id;
-                }
+                    int id = y * columns + x;
 
-                if (x < columns - 1)
-                    ImGui::SameLine(0.f, 0.15f);
+                    std::string label("Tile " + std::to_string(id));
+
+                    sf::IntRect rect = currentTileset->GetTileTextureRect(id);
+                    ImVec2 pos = ImGui::GetCursorScreenPos();
+                    ImVec2 size = { static_cast<float>(tileSize.x), static_cast<float>(tileSize.y) };
+                    ImVec2 uv0 = { static_cast<float>(rect.position.x) / texSize.x, static_cast<float>(rect.position.y) / texSize.y };
+                    ImVec2 uv1 = { static_cast<float>(rect.position.x + rect.size.x) / texSize.x, static_cast<float>(rect.position.y + rect.size.y) / texSize.y };
+
+                    if (id == selectedTileID)
+                        ImGui::Image(texRef, size, uv0, uv1, { 1.f, 1.f, 1.f, 0.5f }, { 0.35f, 0.63f, 1.f, 0.86f });
+                    else
+                        ImGui::Image(texRef, size, uv0, uv1, { 1.f, 1.f, 1.f, 1.f }, { 0.35f, 0.63f, 1.f, 0.86f });
+
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip(label.c_str());
+                    }
+
+                    ImGui::SetCursorScreenPos(pos);
+                    if (ImGui::InvisibleButton(label.c_str(), size))
+                    {
+                        selectedTileID = id;
+                    }
+
+                    if (x < columns - 1)
+                        ImGui::SameLine(0.f, -0.5f);
+                }
             }
         }
-        ImGui::Separator();
+        ImGui::EndChild();
     }
     if (ImGui::Button("Create"))
     {
@@ -218,7 +234,7 @@ void EditorState::RenderTileSelector()
 
         if (ImGui::Button("Create"))
         {
-            const char* path = tinyfd_openFileDialog("Open tileset...", "..", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
+            const char* path = tinyfd_openFileDialog("Open tileset...", "../", 0, filters, "Image (*.png, *.jpeg, *.jpg)", 0);
             if (path)
             {
                 std::string strPath(path);
