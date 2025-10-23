@@ -1,4 +1,5 @@
 #include "Camera.hpp"
+#include "ImGui/imgui.h"
 
 Camera::Camera() : moveSpeed(300.f), zoomLevel(1.f)
 {
@@ -8,7 +9,7 @@ Camera::Camera() : moveSpeed(300.f), zoomLevel(1.f)
 void Camera::HandleEvent(std::optional<sf::Event>& event)
 {
     // Zoom avec molette de souris
-    if (event->is<sf::Event::MouseWheelScrolled>())
+    if (event->is<sf::Event::MouseWheelScrolled>() && !ImGui::GetIO().WantCaptureMouse)
     {
         float deltaMouse = event->getIf<sf::Event::MouseWheelScrolled>()->delta;
         if (deltaMouse > 0)
@@ -20,6 +21,8 @@ void Camera::HandleEvent(std::optional<sf::Event>& event)
 
 void Camera::Move(float dt)
 {
+    if (ImGui::GetIO().WantCaptureMouse) return;
+
     // Déplacement avec flèches
     sf::Vector2f offset(0.f, 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W)) offset.y = -1;

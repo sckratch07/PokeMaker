@@ -76,6 +76,9 @@
     <ClCompile Include="Project.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="LinkMap.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig.h">
@@ -143,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="Project.hpp">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkMap.hpp">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -148,6 +148,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EditorState.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="LinkMap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapEditor.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="EditorState.hpp" />
     <ClInclude Include="Layer.hpp" />
+    <ClInclude Include="LinkMap.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapEditor.hpp" />
     <ClInclude Include="Project.hpp" />
