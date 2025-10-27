@@ -12,7 +12,8 @@ public:
     void DeleteLayer(int id);
 
     void Render(sf::RenderWindow& window);
-    void Update(float dt, sf::RenderWindow& window, Project* project, int selectedTile, int selectedLayer, int tilesetID);
+    void UpdatePlace(float dt, sf::RenderWindow& window, Project* project, int selectedTile, int selectedLayer, int tilesetID);
+    void UpdateCollision(float dt, sf::RenderWindow& window, Project* project, int selectedLayer);
     void DrawGrid(sf::RenderWindow& window);
 
     // Accesseurs

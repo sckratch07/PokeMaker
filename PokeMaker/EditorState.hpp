@@ -29,6 +29,7 @@ private:
     Camera camera;                                         // Caméra
     Project* activeProject;                                // Projet actif (ou nullptr)
     ImVec2 windowCenter;
+    bool placeMode;
 
     // Widget boolean
     bool showTileSelector = true;

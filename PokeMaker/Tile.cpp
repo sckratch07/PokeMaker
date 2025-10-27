@@ -1,18 +1,22 @@
 #include "Tile.hpp"
 
-Tile::Tile() : sprite({0, 0}), position(0, 0), textureRect({0, 0}, {0, 0}), collidable(false), tilesetIndex(-1) {}
+Tile::Tile() : sprite({0, 0}), position(0, 0), textureRect({0, 0}, {0, 0}), collidable(false), tilesetIndex(-1), isLayerSelected(false) {}
 
-Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRect& rect, int tileset) : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), tilesetIndex(tileset)
+Tile::Tile(const sf::Vector2i& pos, const sf::Texture& texture, const sf::IntRect& rect, int tileset)
+    : sprite(sf::Vector2f(rect.size)), position(pos), textureRect(rect), collidable(false), tilesetIndex(tileset), isLayerSelected(false)
 {
     sprite.setPosition({ (float)pos.x, (float)pos.y });
+    collisionSprite = sprite;
+    collisionSprite.setFillColor(sf::Color(0, 0, 0, 150));
     sprite.setTexture(&texture);
     sprite.setTextureRect(rect);
 }
 
 void Tile::Draw(sf::RenderWindow& window)
 {
-    if (tilesetIndex >= 0)
-        window.draw(sprite);
+    if (tilesetIndex < 0) return;
+    window.draw(sprite);
+    if (collidable && isLayerSelected) window.draw(collisionSprite);
 }
 
 json Tile::Serialize() const

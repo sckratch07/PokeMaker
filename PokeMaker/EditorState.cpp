@@ -4,7 +4,7 @@
 #include <fstream>
 
 EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLinkMap(0), selectetExitMap("\0"), selectedLayer(0), selectedMap(0), selectedTileID(0),
-    selectedTilesetIndex(0), tileSize(32,32), mapSize(10,10), windowCenter(0,0), name("\n"), actionDistance(0.f) {}
+selectedTilesetIndex(0), tileSize(32, 32), mapSize(10, 10), windowCenter(0, 0), name("\n"), actionDistance(0.f), placeMode(true) {}
 
 void EditorState::CloseEditor()
 {
@@ -54,9 +54,13 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
     // Si une map est chargée, afficher les widgets
     if (activeProject)
     {
-        mapEditor.Update(dt, window, activeProject, selectedTileID, selectedLayer, selectedTilesetIndex);
+        if (placeMode)
+            mapEditor.UpdatePlace(dt, window, activeProject, selectedTileID, selectedLayer, selectedTilesetIndex);
+            RenderTileSelector();
+        else
+            mapEditor.UpdateCollision(dt, window, activeProject, selectedLayer);
+
         RenderLayerPanel();
-        RenderTileSelector();
         RenderProjectPanel();
     }
 

@@ -25,6 +25,8 @@ private:
     sf::Vector2i position;       // Position en tiles
     sf::IntRect textureRect;     // Portion de texture à afficher
     sf::RectangleShape sprite;
+    sf::RectangleShape collisionSprite;
     bool collidable;
+    bool isLayerSelected;
     int tilesetIndex;
 };
