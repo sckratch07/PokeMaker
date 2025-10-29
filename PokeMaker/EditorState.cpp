@@ -1,10 +1,9 @@
 ﻿#include "EditorState.hpp"
 #include "tinyfiledialogs.h"
 #include <iostream>
-#include <fstream>
 
 EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLinkMap(0), selectetExitMap("\0"), selectedLayer(0), selectedMap(0), selectedTileID(0),
-    selectedTilesetIndex(0), tileSize(32,32), mapSize(10,10), windowCenter(0,0), name("\n"), actionDistance(0.f) {}
+selectedTilesetIndex(0), tileSize(32, 32), mapSize(10, 10), windowCenter(0, 0), name("\n"), actionDistance(0.f), collisionMode(false) {}
 
 void EditorState::CloseEditor()
 {
@@ -54,9 +53,15 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
     // Si une map est chargée, afficher les widgets
     if (activeProject)
     {
-        mapEditor.Update(dt, window, activeProject, selectedTileID, selectedLayer, selectedTilesetIndex);
+        if (!collisionMode)
+        {
+            mapEditor.UpdatePlace(dt, window, activeProject, selectedTileID, selectedLayer, selectedTilesetIndex);
+            RenderTileSelector();
+        }
+        else
+            mapEditor.UpdateCollision(dt, window, activeProject, selectedLayer);
+
         RenderLayerPanel();
-        RenderTileSelector();
         RenderProjectPanel();
     }
 
@@ -76,7 +81,7 @@ void EditorState::Update(float dt, sf::RenderWindow& window)
 void EditorState::Render(sf::RenderWindow& window)
 {
     // Rendu de la carte active
-    mapEditor.Render(window);
+    mapEditor.Render(window, collisionMode, selectedLayer);
 
     // Rendu final ImGui
     ImGui::SFML::Render(window);
@@ -164,10 +169,9 @@ void EditorState::RenderTileSelector()
 
     if (tilesets.size() != 0)
     {
-        if (ImGui::BeginChild("Tileset List Selector", ImVec2(0, 0), ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
-            ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove))
+        if (ImGui::BeginCombo("##TilesetSelector", std::filesystem::path(tilesets[selectedTilesetIndex]->GetPath()).filename().string().c_str()))
         {
+
             for (int i = 0; i < tilesets.size(); i++)
             {
                 ImGui::PushID(i);
@@ -179,8 +183,8 @@ void EditorState::RenderTileSelector()
 
                 ImGui::PopID();
             }
+            ImGui::EndCombo();
         }
-        ImGui::EndChild();
 
         Tileset* currentTileset = tilesets[selectedTilesetIndex];
 
@@ -357,23 +361,29 @@ void EditorState::RenderProjectPanel()
 
     if (ImGui::Begin("Project Panel", &showProjectPanel))
     {
-        std::vector<Map*> maps = activeProject->GetMaps();
+        ImGui::Text("Project: %s", activeProject->GetName().c_str());
 
-        if (ImGui::BeginChild("Map Panel", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
+        ImGui::Text("Collision");
+        ImGui::SameLine();
+        ImGui::Checkbox("##CollisionBox", &collisionMode);
+
+        std::vector<Map*> maps = activeProject->GetMaps();
+        if (ImGui::BeginChild("Map Panel", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY,
             ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove))
         {
-
-            for (int i = 0; i < maps.size(); i++)
+            if (ImGui::BeginCombo("##MapCombo", mapEditor.GetActiveMap()->GetName().c_str()))
             {
-                ImGui::PushID(i);
-
-                if (ImGui::Selectable(maps[i]->GetName().c_str(), mapEditor.GetActiveMap() == maps[i]))
+                for (int i = 0; i < maps.size(); i++)
                 {
-                    mapEditor.SetActiveMap(maps[i]);
-                    selectedMap = i;
+                    ImGui::PushID(i);
+                    if (ImGui::Selectable(maps[i]->GetName().c_str(), mapEditor.GetActiveMap() == maps[i]))
+                    {
+                        mapEditor.SetActiveMap(maps[i]);
+                        selectedMap = i;
+                    }
+                    ImGui::PopID();
                 }
-
-                ImGui::PopID();
+                ImGui::EndCombo();
             }
 
             if (ImGui::Button("Create Map"))
@@ -381,10 +391,14 @@ void EditorState::RenderProjectPanel()
                 ImGui::OpenPopup("New Map");
             }
             ImGui::SameLine();
-            if (ImGui::Button("Delete Map"))
+            if (maps.size() > 1)
             {
-                activeProject->DeleteMap(selectedMap);
-                selectedMap = std::max(selectedMap - 1, 0);
+                if (ImGui::Button("Delete Map"))
+                {
+                    activeProject->DeleteMap(selectedMap);
+                    selectedMap = std::max(selectedMap - 1, 0);
+                    mapEditor.SetActiveMap(maps[selectedMap]);
+                }
             }
 
             ImGui::SetNextWindowPos(windowCenter, 0, { 0.5f, 0.5f });
@@ -418,7 +432,7 @@ void EditorState::RenderProjectPanel()
 
         ImGui::Separator();
         
-        if (ImGui::BeginChild("LinkMap Panel", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY,
+        if (ImGui::BeginChild("LinkMap Panel", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY,
             ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove))
         {
             std::vector<LinkMap>& links = activeProject->GetLinks();
@@ -443,18 +457,20 @@ void EditorState::RenderProjectPanel()
                 ImGui::OpenPopup("New LinkMap");
             }
             ImGui::SameLine();
-            if (ImGui::Button("Delete LinkMap"))
+            if (links.size() > 0)
             {
-                activeProject->DeleteLink(selectedLinkMap);
-                selectedLinkMap = std::max(selectedLinkMap - 1, 0);
+                if (ImGui::Button("Delete LinkMap"))
+                {
+                    activeProject->DeleteLink(selectedLinkMap);
+                    selectedLinkMap = std::max(selectedLinkMap - 1, 0);
+                }
             }
 
             ImGui::SetNextWindowPos(windowCenter, 0, { 0.5f, 0.5f });
             if (ImGui::BeginPopupModal("New LinkMap", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
                 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking))
             {
-                if (ImGui::BeginChild("Exit Map Selector", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY,
-                    ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove))
+                if (ImGui::BeginCombo("##MapList", selectetExitMap.c_str()))
                 {
                     for (int i = 0; i < maps.size(); i++)
                     {
@@ -465,8 +481,8 @@ void EditorState::RenderProjectPanel()
                             selectetExitMap = mapName;
                         ImGui::PopID();
                     }
+                    ImGui::EndCombo();
                 }
-                ImGui::EndChild();
 
                 ImGui::Text("Enter Position : ");
                 ImGui::SameLine();

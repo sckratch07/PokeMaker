@@ -30,15 +30,15 @@ void MapEditor::DeleteLayer(int id)
     layers.pop_back();
 }
 
-void MapEditor::Render(sf::RenderWindow& window)
+void MapEditor::Render(sf::RenderWindow& window, bool& collisionMode, int& selectedLayer)
 {
     if (!activeMap) return;
 
-    activeMap->Render(window);
+    activeMap->Render(window, collisionMode, selectedLayer);
     DrawGrid(window);
 }
 
-void MapEditor::Update(float dt, sf::RenderWindow& window, Project* project, int selectedTile, int selectedLayer, int tilesetID)
+void MapEditor::UpdatePlace(float dt, sf::RenderWindow& window, Project* project, int selectedTile, int selectedLayer, int tilesetID)
 {
     if (!activeMap || tilesetID >= project->GetTilesets().size() || tilesetID < 0) return;
 
@@ -72,6 +72,31 @@ void MapEditor::Update(float dt, sf::RenderWindow& window, Project* project, int
     {
         Layer& layer = activeMap->GetLayer(selectedLayer);
         layer.SetTile(tilePos.x, tilePos.y, Tile());
+    }
+}
+
+void MapEditor::UpdateCollision(float dt, sf::RenderWindow& window, Project* project, int selectedLayer)
+{
+    if (!activeMap) return;
+
+    // Conversion de la position souris en coordonnées map
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, window.getView());
+    sf::Vector2i tilePos(
+        static_cast<int>(worldPos.x / activeMap->GetTileSize().x),
+        static_cast<int>(worldPos.y / activeMap->GetTileSize().y));
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && tilePos.x >= 0 && tilePos.y >= 0)
+    {
+        Layer& layer = activeMap->GetLayer(selectedLayer);
+        Tile* tile = layer.GetTile(tilePos.x, tilePos.y);
+        if (tile) tile->SetCollidable(true);
+    }
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && tilePos.x >= 0 && tilePos.y >= 0)
+    {
+        Layer& layer = activeMap->GetLayer(selectedLayer);
+        Tile* tile = layer.GetTile(tilePos.x, tilePos.y);
+        if (tile) tile->SetCollidable(false);
     }
 }
 

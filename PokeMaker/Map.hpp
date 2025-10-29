@@ -8,7 +8,7 @@ public:
     Map(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize);
 
     void AddLayer(const std::string& name);
-    void Render(sf::RenderWindow& window);
+    void Render(sf::RenderWindow& window, bool& collisionMode, int& selectedLayer);
 
     json Serialize() const;
     void Deserialize(const json& jsonData, std::vector<Tileset*> tilesets);

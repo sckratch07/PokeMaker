@@ -9,7 +9,7 @@ public:
     void SetTile(int x, int y, const Tile& tile);
     Tile* GetTile(int x, int y);
     std::vector<std::vector<Tile>> GetTiles();
-    void Render(sf::RenderWindow& window);
+    void Render(sf::RenderWindow& window, bool& drawCollision);
     void Clear();
 
     json Serialize() const;
