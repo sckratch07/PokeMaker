@@ -30,11 +30,11 @@ void MapEditor::DeleteLayer(int id)
     layers.pop_back();
 }
 
-void MapEditor::Render(sf::RenderWindow& window)
+void MapEditor::Render(sf::RenderWindow& window, bool& collisionMode, int& selectedLayer)
 {
     if (!activeMap) return;
 
-    activeMap->Render(window);
+    activeMap->Render(window, collisionMode, selectedLayer);
     DrawGrid(window);
 }
 
@@ -90,13 +90,13 @@ void MapEditor::UpdateCollision(float dt, sf::RenderWindow& window, Project* pro
     {
         Layer& layer = activeMap->GetLayer(selectedLayer);
         Tile* tile = layer.GetTile(tilePos.x, tilePos.y);
-        tile->SetCollidable(true);
+        if (tile) tile->SetCollidable(true);
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && tilePos.x >= 0 && tilePos.y >= 0)
     {
         Layer& layer = activeMap->GetLayer(selectedLayer);
         Tile* tile = layer.GetTile(tilePos.x, tilePos.y);
-        tile->SetCollidable(false);
+        if (tile) tile->SetCollidable(false);
     }
 }
 

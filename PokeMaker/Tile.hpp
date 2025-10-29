@@ -6,7 +6,7 @@ public:
     Tile();
     Tile(const sf::Vector2i& position, const sf::Texture& texture, const sf::IntRect& textureRect, int tilesetIndex = 0);
 
-    void Draw(sf::RenderWindow& window);
+    void Draw(sf::RenderWindow& window, bool& drawCollision);
 
     json Serialize() const;
     void Deserialize(const json& jsonData, std::vector<Tileset*> tilesets);
@@ -27,6 +27,5 @@ private:
     sf::RectangleShape sprite;
     sf::RectangleShape collisionSprite;
     bool collidable;
-    bool isLayerSelected;
     int tilesetIndex;
 };

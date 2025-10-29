@@ -16,11 +16,12 @@ void Map::AddLayer(const std::string& layerName)
     layers.push_back(Layer(layerName, id, size));
 }
 
-void Map::Render(sf::RenderWindow& window)
+void Map::Render(sf::RenderWindow& window, bool& collisionMode, int& selectedLayer)
 {
-    for (auto& layer : layers)
+    for (int i = 0; i < layers.size(); i++)
     {
-        layer.Render(window);
+        bool drawCollision = (collisionMode && selectedLayer == i);
+        layers[i].Render(window, drawCollision);
     }
 }
 

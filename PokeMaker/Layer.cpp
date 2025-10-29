@@ -33,7 +33,7 @@ std::vector<std::vector<Tile>> Layer::GetTiles()
     return tiles;
 }
 
-void Layer::Render(sf::RenderWindow& window)
+void Layer::Render(sf::RenderWindow& window, bool& drawCollision)
 {
     if (!visible) return;
 
@@ -41,7 +41,7 @@ void Layer::Render(sf::RenderWindow& window)
     {
         for (auto& tile : row)
         {
-            tile.Draw(window);
+            tile.Draw(window, drawCollision);
         }
     }
 }

@@ -11,7 +11,7 @@ public:
     void LoadMap(const std::string& name, Project* currentProject);
     void DeleteLayer(int id);
 
-    void Render(sf::RenderWindow& window);
+    void Render(sf::RenderWindow& window, bool& collisionMode, int& selectedLayer);
     void UpdatePlace(float dt, sf::RenderWindow& window, Project* project, int selectedTile, int selectedLayer, int tilesetID);
     void UpdateCollision(float dt, sf::RenderWindow& window, Project* project, int selectedLayer);
     void DrawGrid(sf::RenderWindow& window);
