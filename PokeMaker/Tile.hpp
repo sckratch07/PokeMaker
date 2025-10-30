@@ -4,7 +4,7 @@
 class Tile {
 public:
     Tile();
-    Tile(const sf::Vector2i& position, const sf::Texture& texture, const sf::IntRect& textureRect, int tilesetIndex = 0);
+    Tile(const sf::Vector2i& size, const sf::Vector2i& position, const sf::Texture& texture, const sf::IntRect& textureRect, int tilesetIndex = 0);
 
     void Draw(sf::RenderWindow& window, bool& drawCollision);
 
@@ -23,6 +23,7 @@ public:
 
 private:
     sf::Vector2i position;       // Position en tiles
+    sf::Vector2i size;       // Position en tiles
     sf::IntRect textureRect;     // Portion de texture à afficher
     sf::RectangleShape sprite;
     sf::RectangleShape collisionSprite;

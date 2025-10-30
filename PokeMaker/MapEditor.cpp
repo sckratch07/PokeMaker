@@ -60,7 +60,7 @@ void MapEditor::UpdatePlace(float dt, sf::RenderWindow& window, Project* project
 
             sf::IntRect texRect = tileset->GetTileTextureRect(selectedTile);
             Tile newTile(
-                sf::Vector2i(tilePos.x * activeMap->GetTileSize().x, tilePos.y * activeMap->GetTileSize().y),
+                activeMap->GetTileSize(), sf::Vector2i(tilePos.x * activeMap->GetTileSize().x, tilePos.y * activeMap->GetTileSize().y),
                 tileset->GetTexture(), texRect, tilesetID
             );
 

@@ -7,6 +7,12 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{3e35514c-505c-4bd2-953a-01515b8fccfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ressources">
+      <UniqueIdentifier>{ce4061eb-47f4-4b50-a844-21ef7362d045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{3a7fa41c-9728-4917-abd0-84e4ce8d658e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Extern">
       <UniqueIdentifier>{ffafb0d8-023a-4db0-a5e4-ea0063197029}</UniqueIdentifier>
     </Filter>
@@ -18,12 +24,6 @@
     </Filter>
     <Filter Include="Extern\tinyfiledialogs">
       <UniqueIdentifier>{af120b7a-631f-4ada-8d4d-a6e37cfbcf52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ressources">
-      <UniqueIdentifier>{ce4061eb-47f4-4b50-a844-21ef7362d045}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{3a7fa41c-9728-4917-abd0-84e4ce8d658e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
