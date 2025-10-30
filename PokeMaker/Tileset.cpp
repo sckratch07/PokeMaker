@@ -10,7 +10,7 @@ bool Tileset::LoadFromFile(const std::string& path, const sf::Vector2i& tileSize
         return false;
     }
 
-    this->path = std::filesystem::absolute(path).string();
+    this->path = std::filesystem::relative(path).string();
     this->tileSize = tileSize;
 
     // Calcul des colonnes et lignes en fonction de la taille de la texture
