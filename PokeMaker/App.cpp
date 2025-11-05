@@ -1,5 +1,4 @@
 ﻿#include "App.hpp"
-#include "tinyfiledialogs.h"
 
 App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editorState(), isRunning(true)
 {
@@ -95,7 +94,7 @@ App::App() : window(sf::VideoMode(sf::Vector2u(1280, 720)), "PokeMaker"), editor
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     }
 
-    editorState.Init();
+    //editorState.Init();
 }
 
 App::~App()
@@ -112,10 +111,11 @@ void App::Run()
         // Calcul du deltaTime
         deltaTime = clock.restart();
 
+        ImGui::SFML::Update(window, deltaTime);
         // Gestion des événements
         ProcessEvents();
         // Mise à jour de la logique
-        Update(deltaTime);
+        Update(deltaTime.asSeconds());
         // Rendu
         Render();
     }
@@ -136,16 +136,14 @@ void App::ProcessEvents()
         }
 
         // Autres événements (touche, souris, redimensionnement...)
-        editorState.HandleEvent(event);
+        //editorState.HandleEvent(event);
     }
 }
 
-void App::Update(sf::Time& dt)
+void App::Update(float dt)
 {
-    ImGui::SFML::Update(window, dt);
-
     // Mise à jour de l'état de l'éditeur
-    editorState.Update(dt.asSeconds(), window);
+    //editorState.Update(dt.asSeconds(), window);
 }
 
 void App::Render()
@@ -153,7 +151,7 @@ void App::Render()
     window.clear(sf::Color(20, 23, 30)); // couleur de fond neutre
 
     // Appliquer la camera / view si EditorState s'en occupe avant de dessiner
-    editorState.Render(window);
+    //editorState.Render(window);
 
     window.display();
 }

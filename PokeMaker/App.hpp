@@ -11,7 +11,7 @@ public:
     // Gère la file d'événements SFML
     void ProcessEvents();
     // Mise à jour de la logique
-    void Update(sf::Time& dt);
+    void Update(float dt);
     // Rendu
     void Render();
 

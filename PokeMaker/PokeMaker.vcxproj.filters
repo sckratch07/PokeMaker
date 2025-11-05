@@ -55,33 +55,6 @@
     <ClCompile Include="EditorState.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="MapEditor.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Project.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Tileset.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="LinkMap.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImGui\imconfig.h">
@@ -125,33 +98,6 @@
     </ClInclude>
     <ClInclude Include="EditorState.hpp">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectManager.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.hpp">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="MapEditor.hpp">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Project.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Tileset.hpp">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.hpp">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.hpp">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkMap.hpp">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Layer.hpp">
-      <Filter>Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
