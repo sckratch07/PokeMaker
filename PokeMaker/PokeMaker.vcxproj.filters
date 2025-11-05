@@ -10,9 +10,6 @@
     <Filter Include="Ressources">
       <UniqueIdentifier>{ce4061eb-47f4-4b50-a844-21ef7362d045}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{3a7fa41c-9728-4917-abd0-84e4ce8d658e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Extern">
       <UniqueIdentifier>{ffafb0d8-023a-4db0-a5e4-ea0063197029}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     </Filter>
     <Filter Include="Extern\tinyfiledialogs">
       <UniqueIdentifier>{af120b7a-631f-4ada-8d4d-a6e37cfbcf52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{3a7fa41c-9728-4917-abd0-84e4ce8d658e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,19 +68,19 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Tileset.cpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="LinkMap.cpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,19 +139,19 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Tileset.hpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="Tile.hpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="Map.hpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="LinkMap.hpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="Layer.hpp">
-      <Filter>Game</Filter>
+      <Filter>Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

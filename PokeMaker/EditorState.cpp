@@ -5,20 +5,6 @@
 EditorState::EditorState() : activeProject(nullptr), createProjectPopupOpen(false), selectedLinkMap(0), selectetExitMap("\0"), selectedLayer(0), selectedMap(0), selectedTileID(0),
 selectedTilesetIndex(0), tileSize(32, 32), mapSize(10, 10), windowCenter(0, 0), name("\n"), actionDistance(0.f), collisionMode(false) {}
 
-void EditorState::CloseEditor()
-{
-    for (Map* map : activeProject->GetMaps())
-    {
-        delete map;
-    }
-
-    std::vector<Tileset*> tilesets = activeProject->GetTilesets();
-    for (Tileset* tileset : tilesets)
-    {
-        delete tileset;
-    }
-}
-
 void EditorState::Init()
 {
     // Initialisation des gestionnaires internes
@@ -367,7 +353,7 @@ void EditorState::RenderProjectPanel()
         ImGui::SameLine();
         ImGui::Checkbox("##CollisionBox", &collisionMode);
 
-        std::vector<Map*> maps = activeProject->GetMaps();
+        std::vector<Map> maps = activeProject->GetMaps();
         if (ImGui::BeginChild("Map Panel", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY,
             ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove))
         {
@@ -376,9 +362,9 @@ void EditorState::RenderProjectPanel()
                 for (int i = 0; i < maps.size(); i++)
                 {
                     ImGui::PushID(i);
-                    if (ImGui::Selectable(maps[i]->GetName().c_str(), mapEditor.GetActiveMap() == maps[i]))
+                    if (ImGui::Selectable(maps[i].GetName().c_str(), mapEditor.GetActiveMap() == &maps[i]))
                     {
-                        mapEditor.SetActiveMap(maps[i]);
+                        mapEditor.SetActiveMap(&maps[i]);
                         selectedMap = i;
                     }
                     ImGui::PopID();
@@ -397,7 +383,7 @@ void EditorState::RenderProjectPanel()
                 {
                     activeProject->DeleteMap(selectedMap);
                     selectedMap = std::max(selectedMap - 1, 0);
-                    mapEditor.SetActiveMap(maps[selectedMap]);
+                    mapEditor.SetActiveMap(&maps[selectedMap]);
                 }
             }
 
@@ -474,9 +460,9 @@ void EditorState::RenderProjectPanel()
                 {
                     for (int i = 0; i < maps.size(); i++)
                     {
-                        if (maps[i] == currentMap) continue;
+                        if (&maps[i] == currentMap) continue;
                         ImGui::PushID(i);
-                        std::string mapName = maps[i]->GetName();
+                        std::string mapName = maps[i].GetName();
                         if (ImGui::Selectable(mapName.c_str(), selectetExitMap == mapName))
                             selectetExitMap = mapName;
                         ImGui::PopID();

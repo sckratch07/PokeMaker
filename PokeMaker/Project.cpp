@@ -4,18 +4,18 @@ Project::Project() : name(""), basePath("") {}
 
 Project::Project(const std::string& name, const std::string& basePath) : name(name), basePath(basePath) {}
 
-void Project::AddMap(Map* map)
+void Project::AddMap(Map& map)
 {
     maps.push_back(map);
 }
 
 Map* Project::GetMap(const std::string& mapName)
 {
-    for (Map* map : maps)
+    for (Map& map : maps)
     {
-        if (map->GetName() == mapName)
+        if (map.GetName() == mapName)
         {
-            return map;
+            return &map;
         }
     }
     return nullptr; // non trouvé
@@ -30,7 +30,6 @@ void Project::DeleteMap(int id)
             std::swap(maps[id], maps[id + 1]);
         }
     }
-    delete maps.back();
     maps.pop_back();
 }
 
@@ -52,9 +51,9 @@ void Project::DeleteTileset(int id)
 {
     if (id < 0 || id >= tilesets.size()) return;
 
-    for (Map* map : maps)
+    for (Map& map : maps)
     {
-        for (Layer& layer : map->GetLayers())
+        for (Layer& layer : map.GetLayers())
         {
             for (std::vector<Tile>& tiles : layer.GetTiles())
             {
@@ -110,9 +109,9 @@ json Project::Serialize() const
     }
 
     j["maps"] = json::array();
-    for (Map* map : maps)
+    for (const Map& map : maps)
     {
-        j["maps"].push_back(map->Serialize());
+        j["maps"].push_back(map.Serialize());
     }
 
     j["links"] = json::array();
@@ -140,14 +139,13 @@ void Project::Deserialize(const json& jsonData)
         }
     }
 
-    for (Map* map : maps) { delete map; }
     maps.clear();
     if (jsonData.contains("maps") && jsonData["maps"].is_array())
     {
         for (const auto& mapJson : jsonData["maps"])
         {
-            Map* map = new Map;
-            map->Deserialize(mapJson, tilesets);
+            Map map;
+            map.Deserialize(mapJson, tilesets);
             maps.push_back(map);
         }
     }

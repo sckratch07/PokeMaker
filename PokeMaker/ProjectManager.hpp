@@ -1,8 +1,6 @@
 #pragma once
 #include "Project.hpp"
 
-class Project;
-
 class ProjectManager {
 public:
     ProjectManager() : newProject(false) {};

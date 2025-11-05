@@ -7,9 +7,9 @@ MapEditor::~MapEditor()
 
 void MapEditor::NewMap(const std::string& name, const sf::Vector2i& size, const sf::Vector2i& tileSize, Project* currentProject)
 {
-    activeMap = new Map(name, size, tileSize);
+    Map activeMap(name, size, tileSize);
     currentProject->AddMap(activeMap);
-    activeMap->AddLayer("Layer 0");
+    activeMap.AddLayer("Layer 0");
 }
 
 void MapEditor::LoadMap(const std::string& name, Project* currentProject)

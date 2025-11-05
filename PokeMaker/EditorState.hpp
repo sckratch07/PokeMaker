@@ -10,10 +10,8 @@ class EditorState {
 public:
     EditorState();
 
-    void CloseEditor();
-
     void Init();                                           // Initialisation complète
-    void HandleEvent(std::optional<sf::Event>& evant);     // Gestion des évènement
+    void HandleEvent(std::optional<sf::Event>& event);     // Gestion des évènement
     void Update(float dt, sf::RenderWindow& window);       // Mise à jour logique
     void Render(sf::RenderWindow& window);                 // Rendu global
 

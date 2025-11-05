@@ -1,7 +1,5 @@
 #pragma once
 #include "Map.hpp"
-#include "ProjectManager.hpp"
-#include "Camera.hpp"
 
 class MapEditor {
 public:

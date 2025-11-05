@@ -8,7 +8,7 @@ public:
     Project();
     Project(const std::string& name, const std::string& basePath);
     
-    void AddMap(Map* map);
+    void AddMap(Map& map);
     Map* GetMap(const std::string& name);
     void DeleteMap(int id);
 
@@ -25,14 +25,14 @@ public:
     // Accesseurs
     std::string& GetName() { return name; }
     std::string& GetBasePath() { return basePath; }
-    std::vector<Map*>& GetMaps() { return maps; }
+    std::vector<Map>& GetMaps() { return maps; }
     std::vector<Tileset*>& GetTilesets() { return tilesets; }
     std::vector<LinkMap>& GetLinks() { return links; }
 
 private:
     std::string name;
     std::string basePath;
-    std::vector<Map*> maps;
+    std::vector<Map> maps;
     std::vector<Tileset*> tilesets;
     std::vector<LinkMap> links;
 };
