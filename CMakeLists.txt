@@ -36,37 +36,42 @@ include("${CMAKE_SOURCE_DIR}/cmake/CPM.cmake")
 # -------------------------------------------------------------------
 
 # EnTT
-CPMAddPackage("gh:skypjack/entt@v3.11.0") # adjust tag if you want
+CPMAddPackage(
+  NAME EnTT
+  GITHUB_REPOSITORY "skypjack/entt"
+  GIT_TAG "v3.15.0"
+)
 
 # nlohmann/json
-CPMAddPackage("gh:nlohmann/json@v3.11.2")
+CPMAddPackage(
+  NAME nlohmann
+  GITHUB_REPOSITORY "nlohmann/json"
+  GIT_TAG "v3.12.0"
+)
 
-# spdlog
-CPMAddPackage("gh:gabime/spdlog@v1.11.0")
-
+# SFML
 CPMAddPackage(
   NAME SFML
   GITHUB_REPOSITORY "SFML/SFML"
   GIT_TAG "3.0.2"
-  OPTIONS "BUILD_SHARED_LIBS=OFF" # prefer static for bundling; adjust as needed
 )
 
-# ImGui (docking branch)
-# We'll fetch upstream imgui and then a binding imgui-sfml
+# ImGui and ImGui-SFML
 CPMAddPackage(
-  NAME imgui
+  NAME ImGui
   GITHUB_REPOSITORY "ocornut/imgui"
-  GIT_TAG "docking"
+  GIT_TAG "v1.92.4-docking"
 )
 
-# ImGui-SFML binding (for rendering ImGui with SFML)
+set(IMGUI_DIR ${ImGui_SOURCE_DIR})
+
 CPMAddPackage(
-  NAME imgui-sfml
+  NAME ImGui-SFML
   GITHUB_REPOSITORY "eliasdaler/imgui-sfml"
-  GIT_TAG "v2.6" # adjust if needed
+  GIT_TAG "v2.6"
 )
 
-# tinyfiledialogs (simple header+source)
+# tinyfiledialogs
 CPMAddPackage(
   NAME tinyfiledialogs
   GITHUB_REPOSITORY "native-toolkit/tinyfiledialogs"
@@ -90,3 +95,7 @@ endif()
 if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()
+
+add_executable(PokeMaker main.cpp)
+
+target_link_libraries(PokeMaker PRIVATE SFML::Graphics SFML::Window SFML::Audio SFML::System)

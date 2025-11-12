@@ -1,6 +1,4 @@
-# src/core/CMakeLists.txt
 cmake_minimum_required(VERSION 3.20)
-
 project(core)
 
 file(GLOB_RECURSE CORE_HEADERS "include/*.hpp" "include/*.h")
@@ -12,16 +10,9 @@ target_include_directories(core PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-# Link common third-party libs
 if(TARGET nlohmann_json)
   target_link_libraries(core PUBLIC nlohmann_json::nlohmann_json)
 endif()
-if(TARGET spdlog)
-  target_link_libraries(core PUBLIC spdlog::spdlog)
-endif()
-
-# Public compile options
-target_compile_features(core PUBLIC cxx_std_20)
 
 # Example defines
 target_compile_definitions(core PUBLIC "CORE_LIBRARY")
