@@ -1,22 +1,34 @@
-# src/game/CMakeLists.txt
-cmake_minimum_required(VERSION 3.20)
 project(game)
 
-file(GLOB_RECURSE GAME_HEADERS "include/*.hpp" "include/*.h")
-file(GLOB_RECURSE GAME_SOURCES "src/*.cpp" "src/*.c")
-
-add_executable(tile_game ${GAME_HEADERS} ${GAME_SOURCES})
-
-target_include_directories(tile_game PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+# Récupération des .cpp
+set(GAME_SOURCES
+  src/main.cpp
+  src/GameApp.cpp
 )
 
-target_link_libraries(tile_game PRIVATE core engine renderer)
-
-# Output dir
-set_target_properties(tile_game PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+# Récupération des .hpp
+set(GAME_HEADERS
+  include/game/GameApp.hpp
 )
 
-target_compile_features(tile_game PRIVATE cxx_std_20)
-target_compile_definitions(tile_game PRIVATE "BUILD_GAME")
+# Création de l'exécutable
+add_executable(tile_game ${GAME_SOURCES} ${GAME_HEADERS})
+target_include_directories(tile_game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Version C++ 20
+target_compile_features(tile_game PUBLIC cxx_std_20)
+
+# Ajout des librairies
+# - core, engine, renderer
+# - SFML
+target_link_libraries(tile_game PRIVATE
+  core
+  engine
+  renderer
+  sfml-graphics sfml-window sfml-system sfml-audio
+)
+
+# Copie le dossier asset dans le fichier source
+add_custom_command(TARGET tile_game POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:tile_game>/assets"
+COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:tile_game>/assets"

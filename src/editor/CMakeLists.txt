@@ -1,42 +1,45 @@
-cmake_minimum_required(VERSION 3.20)
 project(editor)
 
-file(GLOB_RECURSE EDITOR_HEADERS "include/*.hpp" "include/*.h")
-file(GLOB_RECURSE EDITOR_SOURCES "src/*.cpp" "src/*.c")
-
-add_executable(tile_editor ${EDITOR_HEADERS} ${EDITOR_SOURCES})
-
-target_include_directories(tile_editor PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+# Récupérer les .cpp
+set(EDITOR_SOURCES
+  src/main.cpp
+  src/EditorApp.cpp
+  src/EditorUI.cpp
 )
 
-# Link with app libraries
-target_link_libraries(tile_editor PRIVATE core engine renderer)
-
-# ImGui + ImGui-SFML
-if(TARGET imgui)
-  target_link_libraries(tile_editor PRIVATE imgui)
-endif()
-if(TARGET imgui-sfml)
-  target_link_libraries(tile_editor PRIVATE imgui-sfml)
-endif()
-
-# tinyfiledialogs
-if(TARGET tinyfiledialogs)
-  target_link_libraries(tile_editor PRIVATE tinyfiledialogs::tinyfiledialogs)
-else()
-  # fallback: tinyfiledialogs may provide a CMake target or not; try include and link manually
-  # (CPM provides a target if the package root defines it)
-endif()
-
-# Platform-specific linking for SFML is handled by renderer target linking
-# Add compile features
-target_compile_features(tile_editor PRIVATE cxx_std_20)
-
-# Define an RPATH for finding assets next to binary in multi-config builds (optional)
-set_target_properties(tile_editor PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+# Récupérer les .hpp
+set(EDITOR_HEADERS
+  include/editor/EditorApp.hpp
+  include/editor/EditorUI.hpp
 )
 
-# Define preprocessor for editor builds
-target_compile_definitions(tile_editor PRIVATE "BUILD_EDITOR_APP")
+# Création de l'exécutable
+add_executable(tile_editor ${EDITOR_SOURCES} ${EDITOR_HEADERS})
+target_include_directories(tile_editor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Version C++ 20
+target_compile_features(tile_editor PUBLIC cxx_std_20)
+
+# Ajout des librairies
+# - core, engine, renderer
+# - SFML
+# - ImGui + ImGui-SFML
+# - tinyfiledialogs
+target_link_libraries(tile_editor PRIVATE
+  core
+  engine
+  renderer
+  sfml-graphics sfml-window sfml-system sfml-audio
+  imgui
+  imgui-sfml
+  tinyfiledialogs
+)
+
+# Preprocessor definitions for ImGui-SFML backend
+target_compile_definitions(tile_editor PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=0)
+
+# Copie le dossier asset dans le fichier source
+add_custom_command(TARGET tile_editor POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:tile_editor>/assets"
+COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:tile_editor>/assets"
+)
