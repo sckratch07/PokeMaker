@@ -1,7 +1,7 @@
 #ifndef _CORE_ID_GENERATOR_HPP__
 #define _CORE_ID_GENERATOR_HPP__
 
-#include "Types.hpp"
+#include <Types.hpp>
 
 namespace Core
 {

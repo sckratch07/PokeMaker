@@ -21,7 +21,7 @@ include(FetchContent)
 FetchContent_Declare(
   nlohmann_json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.12.0
+  GIT_TAG v3.11.3
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
@@ -49,16 +49,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+set(IMGUI_SFML_FIND_SFML OFF)
 
 # ImGui-SFML
 FetchContent_Declare(
-  imgui-sfml
+  ImGui-SFML
   GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
   GIT_TAG v3.0
 )
-set(IMGUI_DIR ${imgui_SOURCE_DIR})
-set(IMGUI_SFML_FIND_SFML OFF)
-FetchContent_MakeAvailable(imgui-sfml)
+FetchContent_MakeAvailable(ImGui-SFML)
 
 # tinyfiledialogs
 FetchContent_Declare(
@@ -69,7 +69,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tinyfiledialogs)
 
 add_subdirectory(src/core)
-#add_subdirectory(src/engine)
+add_subdirectory(src/engine)
 #add_subdirectory(src/renderer)
 
 if(BUILD_EDITOR)
@@ -84,8 +84,12 @@ if(BUILD_TESTS)
   #add_subdirectory(tests)
 endif()
 
+add_executable(MAIN main.cpp)
+target_link_libraries(MAIN PUBLIC engine core ImGui-SFML)
+
 # Install rules (basic)
-install(DIRECTORY assets DESTINATION .)
+file(COPY ${CMAKE_SOURCE_DIR}/assets
+     DESTINATION ${CMAKE_BINARY_DIR})
 
 message(STATUS "Configuration summary:")
 message(STATUS " BUILD_EDITOR: ${BUILD_EDITOR}")

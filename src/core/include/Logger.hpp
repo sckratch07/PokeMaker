@@ -8,7 +8,7 @@ namespace Core
 {
     enum class LogLevel { Info, Warning, Error };
 
-    inline void Log(const std::string& msg, LogLevel level = LogLevel::Info)
+    inline void log(const std::string& msg, LogLevel level = LogLevel::Info)
     {
         switch(level)
         {
@@ -16,7 +16,7 @@ namespace Core
         case LogLevel::Warning: std::cout << "[WARN] "; break;
         case LogLevel::Error:   std::cerr << "[ERROR] "; break;
         }
-    std::cout << msg << std::endl;
+        std::cout << msg << std::endl;
     }
 } // namespace Core
 

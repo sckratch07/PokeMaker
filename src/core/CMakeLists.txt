@@ -9,14 +9,12 @@ set(CORE_HEADERS
     include/MathUtils.hpp
     include/ResourceManager.hpp
     include/Serialization.hpp
-    include/Timer.hpp
     include/Types.hpp
 )
 
 set(CORE_SOURCES
     src/FileUtils.cpp
     src/ResourceManager.cpp
-    src/Timer.cpp
 )
 
 # Créer la librairie core

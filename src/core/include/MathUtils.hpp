@@ -5,12 +5,12 @@
 
 namespace Core
 {
-    inline float Clamp(float value, float minVal, float maxVal)
+    inline float clamp(float value, float minVal, float maxVal)
     {
         return std::max(minVal, std::min(value, maxVal));
     }
 
-    inline float Lerp(float a, float b, float t)
+    inline float lerp(float a, float b, float t)
     {
         return a + (b - a) * t;
     }

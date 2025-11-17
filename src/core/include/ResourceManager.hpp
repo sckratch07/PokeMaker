@@ -15,8 +15,8 @@ namespace Core
         ~ResourceManager() = default;
 
         // Textures
-        std::shared_ptr<sf::Texture> LoadTexture(const std::string& path);
-        std::shared_ptr<sf::Texture> GetTexture(const std::string& path) const;
+        std::shared_ptr<sf::Texture> loadTexture(const std::string& path);
+        std::shared_ptr<sf::Texture> getTexture(const std::string& path) const;
 
         void clear();
     private:

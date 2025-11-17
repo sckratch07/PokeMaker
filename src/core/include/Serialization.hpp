@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 namespace Core
 {
-    inline bool SaveJsonToFile(const json& j, const std::string& path)
+    inline bool saveJsonToFile(const json& j, const std::string& path)
     {
         std::ofstream ofs(path);
         if (!ofs.is_open()) return false;
@@ -17,7 +17,7 @@ namespace Core
         return true;
     }
 
-    inline bool LoadJsonFromFile(json& j, const std::string& path)
+    inline bool loadJsonFromFile(json& j, const std::string& path)
     {
         std::ifstream ifs(path);
         if (!ifs.is_open()) return false;

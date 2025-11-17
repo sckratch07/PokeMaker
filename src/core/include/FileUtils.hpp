@@ -5,9 +5,9 @@
 
 namespace Core
 {
-    bool FileExists(const std::string& path);
-    std::string GetFileName(const std::string& path);
-    std::string GetFileExtension(const std::string& path);
+    bool fileExists(const std::string& path);
+    std::string getFileName(const std::string& path);
+    std::string getFileExtension(const std::string& path);
 
 } // namespace Core
 

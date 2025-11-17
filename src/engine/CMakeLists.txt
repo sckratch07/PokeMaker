@@ -1,8 +1,32 @@
 project(engine)
 
 # Récupérer tout les .hpp et .cpp
-file(GLOB_RECURSE ENGINE_HEADERS include/engine/*.hpp)
-file(GLOB_RECURSE ENGINE_SOURCES src/*.cpp)
+set(ENGINE_HEADERS
+    include/AnimatedTile.hpp
+    include/AutotileWFC.hpp
+    include/Components.hpp
+    include/Engine.hpp
+    include/Entity.hpp
+    include/Layer.hpp
+    include/QuestSystem.hpp
+    include/Systems.hpp
+    include/Tile.hpp
+    include/Tilemap.hpp
+    include/Tileset.hpp
+    include/World.hpp
+)
+set(ENGINE_SOURCES
+    src/AnimatedTile.cpp
+    src/AutotileWFC.cpp
+    src/Components.cpp
+    src/Entity.cpp
+    src/Layer.cpp
+    src/QuestSystem.cpp
+    src/Systems.cpp
+    src/Tilemap.cpp
+    src/Tileset.cpp
+    src/World.cpp
+)
 
 # Création de la librairie
 add_library(engine STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
