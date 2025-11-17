@@ -12,16 +12,16 @@ set(GAME_HEADERS
 )
 
 # Création de l'exécutable
-add_executable(tile_game ${GAME_SOURCES} ${GAME_HEADERS})
-target_include_directories(tile_game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_executable(pokemaker_game ${GAME_SOURCES} ${GAME_HEADERS})
+target_include_directories(pokemaker_game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Version C++ 20
-target_compile_features(tile_game PUBLIC cxx_std_20)
+target_compile_features(pokemaker_game PUBLIC cxx_std_20)
 
 # Ajout des librairies
 # - core, engine, renderer
 # - SFML
-target_link_libraries(tile_game PRIVATE
+target_link_libraries(pokemaker_game PRIVATE
   core
   engine
   renderer
@@ -32,3 +32,4 @@ target_link_libraries(tile_game PRIVATE
 add_custom_command(TARGET tile_game POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:tile_game>/assets"
 COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:tile_game>/assets"
+)
