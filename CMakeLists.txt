@@ -8,7 +8,6 @@ option(BUILD_TESTS "Build unit tests" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Install prefix convenience
 if(NOT CMAKE_INSTALL_PREFIX)
@@ -85,11 +84,12 @@ if(BUILD_TESTS)
 endif()
 
 add_executable(MAIN main.cpp)
-target_link_libraries(MAIN PUBLIC engine core ImGui-SFML)
+target_link_libraries(MAIN PUBLIC engine core)
+target_link_libraries(MAIN PRIVATE ImGui-SFML nlohmann_json)
 
-# Install rules (basic)
+# Install rules (basic)S
 file(COPY ${CMAKE_SOURCE_DIR}/assets
-     DESTINATION ${CMAKE_BINARY_DIR})
+     DESTINATION ${CMAKE_BINARY_DIR}/Debug)
 
 message(STATUS "Configuration summary:")
 message(STATUS " BUILD_EDITOR: ${BUILD_EDITOR}")

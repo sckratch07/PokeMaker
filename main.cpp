@@ -1,91 +1,65 @@
-#include <Core.hpp>
-#include <Engine.hpp>
-#include <imgui.h>
-#include <imgui-SFML.h>
-#include <nlohmann/json.hpp>
+#include <SFML/Graphics.hpp>
+#include "Tilemap.hpp"
+#include "Tileset.hpp"
+#include "AutotileWFC.hpp"
+#include "Logger.hpp"
 #include <fstream>
+#include <optional>
+#include <nlohmann/json.hpp>
+#include <iostream>
 
-void runWFCOnTilemap(Engine::Tilemap& map)
-{
-    // Chemin vers le fichier JSON
-    const std::string ruleFile = "assets/test.json";
+int main() {
+    // --- SFML window ---
+    sf::RenderWindow window(sf::VideoMode(sf::Vector2u(640, 480)), "Tilemap WFC Test");
 
-    // Charger fichier JSON depuis disque
-    std::ifstream f(ruleFile);
-    if (!f.is_open()) {
-        Core::log("Impossible d'ouvrir le fichier de règles : " + ruleFile, Core::LogLevel::Error);
-        return;
+    // --- Tileset ---
+    auto tileset = std::make_shared<Engine::Tileset>();
+    if (!tileset->loadFromFile("assets/tilesets/tiles.png", 32, 32)) {
+        std::cerr << "Failed to load tileset\n";
+        return 1;
     }
 
-    json j;
-    try {
-        f >> j;
-    } catch (std::exception& e) {
-        Core::log(std::string("Erreur JSON : ") + e.what(), Core::LogLevel::Error);
-        return;
-    }
-
-    // Préparer WFC
-    Engine::AutotileWFC wfc;
-    if (!wfc.loadRulesFromJson(j)) {
-        Core::log("Impossible de charger les règles depuis le JSON.", Core::LogLevel::Error);
-        return;
-    }
-
-    wfc.setSeed(123456);
-
-    // Appliquer WFC sur un layer
-    bool ok = wfc.applyWFC(map, Engine::LayerType::Ground, 123456, 10, true);
-
-    if (!ok) {
-        Core::log("WFC a échoué : aucune solution trouvée.", Core::LogLevel::Error);
-        return;
-    }
-
-    Core::log("WFC appliqué avec succès sur la tilemap !", Core::LogLevel::Info);
-}
-
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(sf::Vector2u(800, 600)), "PokeMaker");
-    window.setFramerateLimit(60);
-
-    if (ImGui::SFML::Init(window))
-        ImGuiIO& io = ImGui::GetIO();
-
-    sf::Clock timer;
-    sf::Time dt;
-
-    Engine::Tilemap map(800, 600);
-    std::shared_ptr<Engine::Tileset> tileset = std::make_shared<Engine::Tileset>();
-    tileset->loadFromFile("assets/tilesets/grass.png", 32, 32);
+    // --- Tilemap ---
+    Engine::Tilemap map(10, 10); // 10x10 tiles
     map.setTileset(tileset);
+    map.addLayer(Engine::LayerType::Ground);
 
-    while (window.isOpen())
-    {
-        dt = timer.restart();
+    // --- Load adjacency rules ---
+    Engine::AutotileWFC wfc;
+    std::ifstream rulesFile("assets/test.json");
+    if (!rulesFile.is_open()) {
+        std::cerr << "Cannot open rules.json\n";
+        return 1;
+    }
 
-        while (const std::optional<sf::Event>& event = window.pollEvent())
-        {
-            ImGui::SFML::ProcessEvent(window, *event);
+    nlohmann::json rulesJson;
+    rulesFile >> rulesJson;
+    if (!wfc.loadRulesFromJson(rulesJson)) {
+        std::cerr << "Failed to load rules\n";
+        return 1;
+    }
+
+    // --- Apply WFC ---
+    if (!wfc.applyWFC(map, Engine::LayerType::Ground, 1234, 10, true)) {
+        std::cerr << "WFC failed\n";
+        return 1;
+    }
+
+    // --- Main loop ---
+    sf::Clock clock;
+    while (window.isOpen()) {
+        while (const std::optional<sf::Event>& event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
 
-        ImGui::SFML::Update(window, dt);
+        float dt = clock.restart().asSeconds();
+        map.update(dt);
 
-        if (ImGui::Begin("Tools"))
-        {
-            if (ImGui::Button("Générer WFC sur Ground"))
-            {
-                runWFCOnTilemap(map);
-            }
-        }
-        ImGui::End();
-
-        window.clear();
-        ImGui::SFML::Render(window);
+        window.clear(sf::Color::Black);
+        window.draw(map);
         window.display();
     }
-    ImGui::SFML::Shutdown();
+
+    return 0;
 }

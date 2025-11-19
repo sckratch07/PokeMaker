@@ -36,5 +36,5 @@ target_include_directories(engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_features(engine PUBLIC cxx_std_20)
 
 # Ajout d'EnTT et SFML
-target_link_libraries(engine PUBLIC core EnTT::EnTT sfml-graphics)
+target_link_libraries(engine PRIVATE core EnTT::EnTT sfml-graphics nlohmann_json)
 
