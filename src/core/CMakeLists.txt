@@ -2,19 +2,11 @@ project(core)
 
 # Récupérer tout les .hpp et .cpp
 set(CORE_HEADERS
-    include/Core.hpp
-    include/FileUtils.hpp
-    include/IDGenerator.hpp
-    include/Logger.hpp
-    include/MathUtils.hpp
-    include/ResourceManager.hpp
-    include/Serialization.hpp
-    include/Types.hpp
+    
 )
 
 set(CORE_SOURCES
-    src/FileUtils.cpp
-    src/ResourceManager.cpp
+
 )
 
 # Créer la librairie core

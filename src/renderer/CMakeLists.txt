@@ -1,8 +1,8 @@
 project(renderer)
 
 # Récupération des .hpp et .cpp
-file(GLOB_RECURSE RENDERER_HEADERS include/renderer/*.hpp)
-file(GLOB_RECURSE RENDERER_SOURCES src/*.cpp)
+set(RENDERER_HEADERS include/renderer/*.hpp)
+set(RENDERER_SOURCES src/*.cpp)
 
 # Création de la librairie renderer
 add_library(renderer STATIC ${RENDERER_SOURCES} ${RENDERER_HEADERS})
