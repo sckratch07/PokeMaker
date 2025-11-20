@@ -1,15 +1,29 @@
-project(renderer)
+# src/Renderer/CMakeLists.txt
+cmake_minimum_required(VERSION 3.21)
+project(Renderer LANGUAGES CXX)
 
-# Récupération des .hpp et .cpp
-set(RENDERER_HEADERS include/renderer/*.hpp)
-set(RENDERER_SOURCES src/*.cpp)
+# Librarie: Renderer
+set(RENDERER_SOURCES
+    src/Camera.cpp
+    src/GridRenderer.cpp
+    src/Renderer.cpp
+    src/RenderWindow.cpp
+    src/TileRenderer.cpp
+)
 
-# Création de la librairie renderer
-add_library(renderer STATIC ${RENDERER_SOURCES} ${RENDERER_HEADERS})
-target_include_directories(renderer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(Renderer STATIC ${RENDERER_SOURCES})
 
-# Version C++ 20
-target_compile_features(renderer PUBLIC cxx_std_20)
+target_include_directories(Renderer
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-# Ajout de la SFML
-target_link_libraries(renderer PUBLIC core sfml-graphics sfml-window sfml-system sfml-audio)
+# Renderer est header-first friendly
+target_compile_features(Renderer PUBLIC cxx_std_20)
+set_target_properties(Renderer PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# Dépendence de Renderer:
+target_link_libraries(Renderer PUBLIC Core sfml-graphics sfml-window sfml-system)
+
+# Organisation pour l'IDE
+set_target_properties(Renderer PROPERTIES FOLDER "PokeMaker/Libraries")

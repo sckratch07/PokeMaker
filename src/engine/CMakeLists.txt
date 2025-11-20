@@ -1,20 +1,32 @@
-project(engine)
+# src/Engine/CMakeLists.txt
+cmake_minimum_required(VERSION 3.21)
+project(Engine LANGUAGES CXX)
 
-# Récupérer tout les .hpp et .cpp
-set(ENGINE_HEADERS
-    
-)
+# Librarie: Engine
 set(ENGINE_SOURCES
-
+    src/World.cpp
+    src/Systems.cpp
+    src/Systems/AnimationSystem.cpp
+    src/Systems/BehaviorSystem.cpp
+    src/Systems/PhysicsSystem.cpp
 )
 
-# Création de la librairie
-add_library(engine STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
-target_include_directories(engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(Engine STATIC ${ENGINE_SOURCES})
 
-# Version C++ 20
-target_compile_features(engine PUBLIC cxx_std_20)
+target_include_directories(Engine
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-# Ajout d'EnTT et SFML
-target_link_libraries(engine PRIVATE core EnTT::EnTT sfml-graphics nlohmann_json)
+# Engine est header-first friendly
+target_compile_features(Engine PUBLIC cxx_std_20)
+set_target_properties(Engine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+# Dépendence de Engine:
+target_link_libraries(Engine PUBLIC Core EnTT::EnTT nlohmann_json::nlohmann_json sfml-graphics sfml-system)
+
+# Include Core automatiquement
+target_include_directories(Engine PUBLIC ${CMAKE_SOURCE_DIR}/src/Core/include)
+
+# Organisation pour l'IDE
+set_target_properties(Engine PROPERTIES FOLDER "PokeMaker/Libraries")

@@ -1,45 +1,58 @@
-project(editor)
+# src/Editor/CMakeLists.txt
+cmake_minimum_required(VERSION 3.21)
+project(EditorApp LANGUAGES CXX)
 
-# Récupérer les .cpp
+# Executable: Editor
 set(EDITOR_SOURCES
-  src/main.cpp
-  src/EditorApp.cpp
-  src/EditorUI.cpp
+    main.cpp
+    src/EditorApplication.cpp
+    src/EditorUI.cpp
+    src/LayerManager.cpp
+    src/NPCEditor.cpp
+    src/TilePalette.cpp
+    src/WFCGenerator.cpp
 )
 
-# Récupérer les .hpp
-set(EDITOR_HEADERS
-  include/EditorApp.hpp
-  include/EditorUI.hpp
-)
+add_executable(Editor ${EDITOR_SOURCES})
 
-# Création de l'exécutable
-add_executable(game_editor ${EDITOR_SOURCES} ${EDITOR_HEADERS})
-target_include_directories(game_editor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(Editor
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 # Version C++ 20
-target_compile_features(game_editor PUBLIC cxx_std_20)
+target_compile_features(Editor PRIVATE cxx_std_20)
 
-# Ajout des librairies
-# - core, engine, renderer
-# - SFML
-# - ImGui + ImGui-SFML
-# - tinyfiledialogs
-target_link_libraries(game_editor PRIVATE
-  core
-  engine
-  renderer
-  sfml-graphics sfml-window sfml-system sfml-audio
-  imgui
-  imgui-sfml
-  tinyfiledialogs
+# Dépendance d'Editor:
+target_link_libraries(Editor
+    PRIVATE
+        Core
+        Engine
+        Renderer
+        sfml-graphics
+        sfml-window
+        sfml-system
+        sfml-audio
+        imgui
+        ImGui-SFML
+        nlohmann_json::nlohmann_json
 )
 
-# Preprocessor definitions for ImGui-SFML backend
-target_compile_definitions(game_editor PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=0)
-
-# Copie le dossier asset dans le fichier source
-add_custom_command(TARGET game_editor POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:game_editor>/assets"
-COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:game_editor>/assets"
+# Organisation pour l'IDE
+set_target_properties(Editor PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+
+# Copie du dossier ressource dans la build
+if(DEFINED RESOURCES_PATH)
+    add_custom_command(TARGET Editor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+            "${CMAKE_BINARY_DIR}/bin/resources"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${RESOURCES_PATH}"
+            "${CMAKE_BINARY_DIR}/bin/resources"
+        COMMENT "Copying resources for Editor"
+    )
+endif()
+
+set_target_properties(Editor PROPERTIES FOLDER "PokeMaker/Apps")

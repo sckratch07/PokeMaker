@@ -1,20 +1,29 @@
-project(core)
+# src/Core/CMakeLists.txt
+cmake_minimum_required(VERSION 3.21)
+project(Core LANGUAGES CXX)
 
-# Récupérer tout les .hpp et .cpp
-set(CORE_HEADERS
-    
-)
-
+# Librarie: Core
 set(CORE_SOURCES
-
+    src/Application.cpp
+    src/FileSystem.cpp
+    src/InputManager.cpp
+    src/Logger.cpp
+    src/ResourceManager.cpp
 )
 
-# Créer la librairie core
-add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
-target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(Core STATIC ${CORE_SOURCES})
 
-# Version C++ 20
-target_compile_features(core PUBLIC cxx_std_20)
+target_include_directories(Core
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-# Ajout de nlohmann et SFML
-target_link_libraries(core PRIVATE sfml-graphics nlohmann_json::nlohmann_json)
+# Core est header-first friendly
+target_compile_features(Core PUBLIC cxx_std_20)
+set_target_properties(Core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# Dépendence de Core:
+# target_link_libraries(Core PUBLIC nlohmann_json::nlohmann_json EnTT::EnTT)
+
+# Organisation pour l'IDE
+set_target_properties(Core PROPERTIES FOLDER "PokeMaker/Libraries")
