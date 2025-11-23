@@ -15,7 +15,7 @@
 # ----------------------------------------------------------------------------
 # Configuration CMake minimale et projet
 # ----------------------------------------------------------------------------
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.5)
 
 # Définition du projet avec version et langages
 project(PokeMaker 
@@ -42,7 +42,7 @@ option(BUILD_EDITOR "Compiler l'éditeur de niveau" OFF)
 
 # Options de build additionnelles
 option(BUILD_SHARED_LIBS "Compiler les bibliothèques en partagé" OFF)
-option(BUILD_TEST "Compiler les tests unitaires" OFF)
+option(BUILD_TESTS "Compiler les tests unitaires" OFF)
 
 # Vérification que Game et Editor ne sont pas activés simultanément
 if(BUILD_GAME AND BUILD_EDITOR)
@@ -113,7 +113,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 message(STATUS "Configuration de SFML...")
 
 FetchContent_Declare(
-    SFML
+    sfml
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 3.0.2
     GIT_SHALLOW TRUE
@@ -125,7 +125,7 @@ set(SFML_BUILD_AUDIO ON)
 set(SFML_BUILD_NETWORK OFF)
 set(BUILD_SHARED_LIBS OFF)
 
-FetchContent_MakeAvailable(SFML)
+FetchContent_MakeAvailable(sfml)
 
 # ----------------------------------------------------------------------------
 # Dépendance : Dear ImGui (Interface graphique immédiate)
@@ -233,24 +233,24 @@ set_target_properties(
 # Chaque module possède son propre CMakeLists.txt
 
 # Module Core - Système de base (Application, ResourceManager, etc.)
-add_subdirectory(src/Core)
+add_subdirectory(src/core)
 
 # Module Engine - Logique du jeu avec ECS
-add_subdirectory(src/Engine)
+add_subdirectory(src/engine)
 
 # Module Renderer - Système de rendu graphique
-add_subdirectory(src/Renderer)
+add_subdirectory(src/renderer)
 
 # Module Game - Application de jeu (si activé)
 if(BUILD_GAME)
     message(STATUS "Configuration du module Game")
-    add_subdirectory(src/Game)
+    add_subdirectory(src/game)
 endif()
 
 # Module Editor - Éditeur de niveau (si activé)
 if(BUILD_EDITOR)
     message(STATUS "Configuration du module Editor")
-    add_subdirectory(src/Editor)
+    add_subdirectory(src/editor)
 endif()
 
 # Module Tests - Tests unitaires (si activé)
@@ -287,7 +287,6 @@ message(STATUS "Options de build :")
 message(STATUS "  BUILD_GAME      : ${BUILD_GAME}")
 message(STATUS "  BUILD_EDITOR    : ${BUILD_EDITOR}")
 message(STATUS "  BUILD_TESTS     : ${BUILD_TESTS}")
-message(STATUS "  BUILD_DOCS      : ${BUILD_DOCS}")
 message(STATUS "----------------------------------------")
 message(STATUS "Chemins :")
 message(STATUS "  Source          : ${CMAKE_SOURCE_DIR}")
@@ -297,6 +296,5 @@ message(STATUS "  Ressources      : ${RESOURCES_PATH}")
 message(STATUS "========================================")
 message(STATUS "")
 
-# mkdir build && cd build
-# cmake .. -DCMAKE_BUILD_TYPE=Release
-# cmake --build .
+# cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_GAME=OFF -DBUILD_EDITOR=ON -DBUILD_TESTS=OFF
+# cmake --build build

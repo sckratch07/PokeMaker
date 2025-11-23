@@ -29,7 +29,7 @@ public:
     using Duration = std::chrono::duration<double>;
 
     Application() = default;
-    ~Application() = default;
+    virtual ~Application() = default;
 
     Application(const Application&) = delete;
     Application& operator=(const Application&) = delete;
@@ -50,7 +50,7 @@ public:
      * @brief Démarre la boucle principale (bloquante).
      * @note Retourne lorsque stop() est appelé.
      */
-    void run();
+    virtual void run();
 
     /**
      * @brief Arrête la boucle principale.

@@ -1,16 +1,23 @@
 # src/Editor/CMakeLists.txt
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.5)
 project(EditorApp LANGUAGES CXX)
 
 # Executable: Editor
 set(EDITOR_SOURCES
-    main.cpp
+    src/main.cpp
     src/EditorApplication.cpp
     src/EditorUI.cpp
     src/LayerManager.cpp
     src/NPCEditor.cpp
     src/TilePalette.cpp
     src/WFCGenerator.cpp
+    src/Map.cpp
+    src/MapLink.cpp
+    src/Project.cpp
+    src/ProjectManager.cpp
+    src/Tools/BrushTool.cpp
+    src/Tools/FillTool.cpp
+    src/Tools/SelectionTool.cpp
 )
 
 add_executable(Editor ${EDITOR_SOURCES})
@@ -24,6 +31,15 @@ target_include_directories(Editor
 target_compile_features(Editor PRIVATE cxx_std_20)
 
 # Dépendance d'Editor:
+
+# portable-file-dialogs (dialog natifs via tinyfiledialogs / zenity / applescript selon plateforme)
+FetchContent_Declare(
+  portable-file-dialogs
+  GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
+  GIT_TAG        0.1.0
+)
+FetchContent_MakeAvailable(portable-file-dialogs)
+
 target_link_libraries(Editor
     PRIVATE
         Core
@@ -36,6 +52,7 @@ target_link_libraries(Editor
         imgui
         ImGui-SFML
         nlohmann_json::nlohmann_json
+        pfd::pfd
 )
 
 # Organisation pour l'IDE

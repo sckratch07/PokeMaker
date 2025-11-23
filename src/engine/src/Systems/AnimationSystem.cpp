@@ -12,14 +12,11 @@ namespace Engine
         // Vue ENTt : toutes les entités possédant AnimationComponent + SpriteComponent
         auto view = registry.view<AnimationComponent, SpriteComponent>();
 
-        for (auto entity : view)
+        view.each([&](entt::entity entity, AnimationComponent& anim, SpriteComponent& sprite)
         {
-            auto& anim = view.get<AnimationComponent>(entity);
-            auto& sprite = view.get<SpriteComponent>(entity);
-
             // Vérifie si l'animation a des frames
             if (!anim.isValid())
-                continue;
+                return;
 
             // Incrémentation du timer
             anim.timer += dt;
@@ -42,6 +39,6 @@ namespace Engine
                 // Applique la nouvelle frame au sprite
                 sprite.sprite.setTextureRect(anim.frames[anim.currentFrame]);
             }
-        }
+        });
     }
 }
