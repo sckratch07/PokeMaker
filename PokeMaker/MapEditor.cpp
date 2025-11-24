@@ -1,4 +1,5 @@
 #include "MapEditor.hpp"
+#include "Project.hpp"
 
 MapEditor::~MapEditor()
 {

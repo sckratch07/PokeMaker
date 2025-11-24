@@ -13,3 +13,4 @@
 *.ipch
 *.iobj
 *.exe
+/docs

@@ -1,6 +1,8 @@
 #pragma once
 #include "Map.hpp"
 
+class Project;
+
 class MapEditor {
 public:
     ~MapEditor();

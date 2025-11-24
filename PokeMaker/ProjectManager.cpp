@@ -14,6 +14,9 @@ bool ProjectManager::CreateProject(const std::string& name, const std::string& p
         fs::create_directories(path + "/assets");
 
         currentProject = Project(name, path);
+        Map defaultMap("Default", { 10, 10 }, { 32, 32 });
+        defaultMap.AddLayer("Layer 0");
+        currentProject.AddMap(defaultMap);
 
         newProject = true;
 
