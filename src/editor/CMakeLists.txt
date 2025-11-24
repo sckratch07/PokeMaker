@@ -52,7 +52,7 @@ target_link_libraries(Editor
         imgui
         ImGui-SFML
         nlohmann_json::nlohmann_json
-        pfd::pfd
+        pfd
 )
 
 # Organisation pour l'IDE

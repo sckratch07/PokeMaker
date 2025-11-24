@@ -31,6 +31,8 @@ project(PokeMaker
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POLICY_VERSION_MAXIMUM 3.28)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 # ----------------------------------------------------------------------------
 # Options de build configurables par l'utilisateur

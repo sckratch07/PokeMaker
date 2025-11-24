@@ -4,7 +4,7 @@
 #include "Editor/Tools/FillTool.hpp"
 #include "Editor/Tools/SelectionTool.hpp"
 
-
+#include <portable-file-dialogs.h>
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <SFML/System/Clock.hpp>
@@ -136,7 +136,7 @@ void EditorApplication::run()
         m_ui.render();
 
         // Vérifier si l’UI demande un changement d’outil
-        requestToolChange(m_ui.selectedTool());
+        //requestToolChange(m_ui.selectedTool());
         
         render();
     }
@@ -173,11 +173,11 @@ void EditorApplication::processEvents()
             return;
         }
         else if(event->is<sf::Event::Closed>())
-            handleShortcuts(event);
+            handleShortcuts(*event);
     }
 }
 
-void EditorApplication::handleShortcuts(sf::Event& event)
+void EditorApplication::handleShortcuts(const sf::Event& event)
 {
     const sf::Event::KeyPressed* keyPressed = event.getIf<sf::Event::KeyPressed>();
     if(!(keyPressed->control | keyPressed->system)) return; // system pour Mac Cmd
@@ -193,7 +193,7 @@ void EditorApplication::handleShortcuts(sf::Event& event)
             m_ui.projectManager().saveProjectAs(result);
             m_ui.projectManager().clearDirty();
         }
-    } else if (event.key.code == sf::Keyboard::O) {
+    } else if (keyPressed->code == sf::Keyboard::Key::O) {
         // Ouvrir
         auto result = pfd::open_file("Ouvrir un projet", "", {"JSON files", "*.json"}).result();
         if (!result.empty()) {
@@ -203,13 +203,13 @@ void EditorApplication::handleShortcuts(sf::Event& event)
                 pfd::message("Erreur", "Impossible d'ouvrir le projet (format ou chemin invalide)", pfd::choice::ok, pfd::icon::error);
             }
         }
-    } else if (event.key.code == sf::Keyboard::S) {
+    } else if (keyPressed->code == sf::Keyboard::Key::S) {
         // Sauvegarder
         if (m_ui.projectManager().activeProject) {
             if (m_ui.projectManager().currentFilePath.empty()) {
                 auto result = pfd::save_file("Sauvegarder le projet sous", "", {"JSON files", "*.json"}).result();
                 if (!result.empty()) {
-                    bool ok = m_ui.projectManager().saveProjectAs(result.front());
+                    bool ok = m_ui.projectManager().saveProjectAs(result);
                     if (ok) m_ui.projectManager().clearDirty();
                     else pfd::message("Erreur", "Impossible de sauvegarder le projet", pfd::choice::ok, pfd::icon::error);
                 }
@@ -219,6 +219,40 @@ void EditorApplication::handleShortcuts(sf::Event& event)
                 else pfd::message("Erreur", "Impossible de sauvegarder le projet", pfd::choice::ok, pfd::icon::error);
             }
         }
+    }
+}
+
+bool EditorApplication::confirmSaveBeforeQuit()
+{
+    // Si pas de projet actif ou pas modifié → ok
+    if (!m_ui.projectManager().activeProject) return true;
+    if (!m_ui.projectManager().dirty) return true;
+
+    // On propose 3 options à l'utilisateur via dialog natif
+    auto choice = pfd::message("Projet modifié", "Le projet contient des modifications non sauvegardées. Voulez-vous sauvegarder avant de quitter ?", 
+                               pfd::choice::yes_no_cancel, pfd::icon::question).result();
+
+    if (choice == pfd::button::ok) {
+        // Yes (sauvegarder)
+        if (m_ui.projectManager().currentFilePath.empty()) {
+            auto res = pfd::save_file("Sauvegarder sous...", "", {"JSON files", "*.json"}).result();
+            if (!res.empty()) {
+                bool ok = m_ui.projectManager().saveProjectAs(res);
+                if (ok) m_ui.projectManager().clearDirty();
+                return ok;
+            }
+            return false;
+        } else {
+            bool ok = m_ui.projectManager().saveProject();
+            if (ok) m_ui.projectManager().clearDirty();
+            return ok;
+        }
+    } else if (choice == pfd::button::no) {
+        // No -> quitter sans sauvegarder
+        return true;
+    } else {
+        // Cancel -> ne pas fermer
+        return false;
     }
 }
 
@@ -236,7 +270,7 @@ void EditorApplication::update(float /*dt*/)
                 m_activeTool = std::make_unique<Editor::SelectionTool>();
                 break;
             case EditorToolType::Brush:
-                m_activeTool = std::make_unique<Editor::BrushTool>();
+                m_activeTool = std::make_unique<BrushTool>(&m_ui.projectManager(), m_ui.m_tilePalette.get(), &m_ui.m_layerManager);
                 break;
             case EditorToolType::Fill:
                 m_activeTool = std::make_unique<Editor::FillTool>();
