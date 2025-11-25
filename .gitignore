@@ -12,3 +12,4 @@
 *.iobj
 *.exe
 /docs
+/.vs
