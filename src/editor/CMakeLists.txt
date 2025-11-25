@@ -4,20 +4,13 @@ project(EditorApp LANGUAGES CXX)
 
 # Executable: Editor
 set(EDITOR_SOURCES
-    src/main.cpp
-    src/EditorApplication.cpp
-    src/EditorUI.cpp
-    src/LayerManager.cpp
-    src/NPCEditor.cpp
-    src/TilePalette.cpp
-    src/WFCGenerator.cpp
-    src/Map.cpp
-    src/MapLink.cpp
-    src/Project.cpp
-    src/ProjectManager.cpp
-    src/Tools/BrushTool.cpp
-    src/Tools/FillTool.cpp
-    src/Tools/SelectionTool.cpp
+    src/NPC/NPC.cpp             src/main.cpp                src/TilePalette.cpp
+    src/Tools/SelectionTool.cpp src/MapSerializer.cpp       src/TileSet.cpp
+    src/Tools/BrushTool.cpp     src/ProjectManager.cpp      src/ViewController.cpp
+    src/Tools/FillTool.cpp      src/ResourceCache.cpp       src/Map.cpp
+    src/EditorApplication.cpp   src/ShaderManager.cpp
+    src/GridRenderer.cpp        src/TileLayer.cpp
+    src/LayerManager.cpp        src/TileMap.cpp
 )
 
 add_executable(Editor ${EDITOR_SOURCES})
