@@ -4,11 +4,8 @@ project(Renderer LANGUAGES CXX)
 
 # Librarie: Renderer
 set(RENDERER_SOURCES
-    src/Camera.cpp
-    src/GridRenderer.cpp
-    src/Renderer.cpp
-    src/RenderWindow.cpp
-    src/TileRenderer.cpp
+    src/Camera2D.cpp
+    src/MapRenderer.cpp
 )
 
 add_library(Renderer STATIC ${RENDERER_SOURCES})

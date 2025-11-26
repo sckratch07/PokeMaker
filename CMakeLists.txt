@@ -217,6 +217,17 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nlohmann_json)
 
 # ----------------------------------------------------------------------------
+# Dépendance : portable-file-dialogs (Bibliothèque pour les files dialogs)
+# ----------------------------------------------------------------------------
+# Utilisé pour la sérialisation/désérialisation des maps et configurations
+FetchContent_Declare(
+    portable-file-dialogs
+    GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
+    GIT_TAG        0.1.0
+)
+FetchContent_MakeAvailable(portable-file-dialogs)
+
+# ----------------------------------------------------------------------------
 # Organisation des dépendances externes dans l'IDE
 # ----------------------------------------------------------------------------
 set_target_properties(

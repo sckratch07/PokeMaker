@@ -4,13 +4,49 @@ project(EditorApp LANGUAGES CXX)
 
 # Executable: Editor
 set(EDITOR_SOURCES
-    src/NPC/NPC.cpp             src/main.cpp                src/TilePalette.cpp
-    src/Tools/SelectionTool.cpp src/MapSerializer.cpp       src/TileSet.cpp
-    src/Tools/BrushTool.cpp     src/ProjectManager.cpp      src/ViewController.cpp
-    src/Tools/FillTool.cpp      src/ResourceCache.cpp       src/Map.cpp
-    src/EditorApplication.cpp   src/ShaderManager.cpp       src/AnimatedTile.cpp
-    src/GridRenderer.cpp        src/TileLayer.cpp
-    src/LayerManager.cpp        src/TileMap.cpp
+    src/main.cpp
+    src/EditorApp.cpp
+    src/EditorState.cpp
+    src/EditorUI.cpp
+
+    src/Map/AnimatedTile.cpp
+    src/Map/AutoTile.cpp
+    src/Map/Layer.cpp
+    src/Map/Layer.cpp
+    src/Map/Map.cpp
+    src/Map/MapManager.cpp
+    src/Map/TileMap.cpp
+    src/Map/TileSet.cpp
+
+    src/NPC/NPC.cpp
+    src/NPC/NPCManager.cpp
+    src/NPC/NPCSerializer.cpp
+
+    src/Project/Project.cpp
+    src/Project/ProjectManager.cpp
+    src/Project/ProjectSerializer.cpp
+
+    src/Shaders/ShaderAsset.cpp
+    src/Shaders/ShaderManager.cpp
+
+    src/Tools/BrushTool.cpp
+    src/Tools/CollisionTool.cpp
+    src/Tools/EraserTool.cpp
+    src/Tools/FillTool.cpp
+    src/Tools/SelectionTool.cpp
+    src/Tools/Tool.cpp
+
+    src/UI/LayerPanel.cpp
+    src/UI/MapPanel.cpp
+    src/UI/NPCPanel.cpp
+    src/UI/PropertyPanel.cpp
+    src/UI/ShaderPanel.cpp
+    src/UI/TilePalette.cpp
+    src/UI/WindowDocking.cpp
+
+    src/Utils/Clipboard.cpp
+    src/Utils/FileDialogs.cpp
+    src/Utils/JsonUtils.cpp
 )
 
 add_executable(Editor ${EDITOR_SOURCES})
@@ -24,15 +60,6 @@ target_include_directories(Editor
 target_compile_features(Editor PRIVATE cxx_std_20)
 
 # Dépendance d'Editor:
-
-# portable-file-dialogs (dialog natifs via tinyfiledialogs / zenity / applescript selon plateforme)
-FetchContent_Declare(
-  portable-file-dialogs
-  GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG        0.1.0
-)
-FetchContent_MakeAvailable(portable-file-dialogs)
-
 target_link_libraries(Editor
     PRIVATE
         Core
