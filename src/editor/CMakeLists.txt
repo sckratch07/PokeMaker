@@ -8,7 +8,7 @@ set(EDITOR_SOURCES
     src/Tools/SelectionTool.cpp src/MapSerializer.cpp       src/TileSet.cpp
     src/Tools/BrushTool.cpp     src/ProjectManager.cpp      src/ViewController.cpp
     src/Tools/FillTool.cpp      src/ResourceCache.cpp       src/Map.cpp
-    src/EditorApplication.cpp   src/ShaderManager.cpp
+    src/EditorApplication.cpp   src/ShaderManager.cpp       src/AnimatedTile.cpp
     src/GridRenderer.cpp        src/TileLayer.cpp
     src/LayerManager.cpp        src/TileMap.cpp
 )
