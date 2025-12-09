@@ -1,40 +1,70 @@
 #include "Core/Project.hpp"
+#include <iostream>
 
 namespace Core
 {
-void to_json(nlohmann::json& j, const Project& p)
-{
-    j = nlohmann::json::object();
-    j["name"] = p.name;
-    j["author"] = p.author;
-    j["schema_version"] = p.schema_version;
-    j["maps"] = nlohmann::json::array();
-    for (const auto &m : p.maps) j["maps"].push_back(m);
-    if (!p.meta.empty()) j["meta"] = p.meta;
-}
-
-void from_json(nlohmann::json& j, Project& p)
-{
-    p.name = j.value("name", std::string());
-    p.author = j.value("author", std::string());
-    p.schema_version = j.value("schema_version", std::string("1.0"));
-    p.maps.clear();
-    if (j.contains("maps") && j["maps"].is_array())
+    TileMap* Project::GetMap(const std::string& mapName)
     {
-        for (const auto &elem : j["maps"])
+        for (auto& map : m_maps)
         {
-            TileMap m;
-            from_json(elem, m);
-            p.maps.push_back(std::move(m));
+            if (map.m_name == mapName)
+            {
+                return &(map);
+            }
         }
+        return nullptr;
     }
-    if (j.contains("meta") && j["meta"].is_object())
+
+    Tileset* Project::GetTileset(const std::string& tilesetName)
     {
-        p.meta = j["meta"].get<std::map<std::string, nlohmann::json>>();
+        for (auto& tileset : m_tilesets)
+        {
+            if (tileset.m_name == tilesetName)
+            {
+                return &tileset;
+            }
+        }
+        return nullptr;
     }
-    else
+
+
+    bool Project::AddMap(TileMap& map)
     {
-        p.meta.clear();
+        m_maps.push_back(map);
+        return true;
+    }
+
+    bool Project::RemoveMap(const std::string& mapName)
+    {
+        for (auto& map : m_maps)
+        {
+            if (map.m_name == mapName)
+            {
+                std::swap(map, m_maps.back());
+                m_maps.pop_back();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool Project::AddTileset(Tileset& tileset)
+    {
+        m_tilesets.push_back(tileset);
+        return true;
+    }
+
+    bool Project::RemoveTileset(const std::string& tilesetName)
+    {
+        for (auto& tileset : m_tilesets)
+        {
+            if (tileset.m_name == tilesetName)
+            {
+                std::swap(tileset, m_tilesets.back());
+                m_tilesets.pop_back();
+                return true;
+            }
+        }
+        return false;
     }
 }
-} // namespace core

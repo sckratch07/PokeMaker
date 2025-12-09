@@ -1,57 +1,26 @@
 #include "Core/Layer.hpp"
-#include <stdexcept>
+#include <iostream>
 
 namespace Core
 {
-const Tile& Layer::GetTileAt(int width, int x, int y) const
-{
-    if (width <= 0) throw std::out_of_range("Layer::GetTileAt: width must be > 0");
-    if (x < 0 || y < 0) throw std::out_of_range("Layer::GetTileAt: negative coordinates");
-    int idx = y * width + x;
-    if (idx < 0 || idx >= static_cast<int>(tiles.size())) throw std::out_of_range("Layer::GetTileAt: index out of bounds");
-    return tiles[idx];
-}
-
-Tile& Layer::GetTileAt(int width, int x, int y)
-{
-    if (width <= 0) throw std::out_of_range("Layer::GetTileAt: width must be > 0");
-    if (x < 0 || y < 0) throw std::out_of_range("Layer::GetTileAt: negative coordinates");
-    int idx = y * width + x;
-    if (idx < 0 || idx >= static_cast<int>(tiles.size())) throw std::out_of_range("Layer::GetTileAt: index out of bounds");
-    return tiles[idx];
-}
-
-void to_json(nlohmann::json& j, const Layer& l)
-{
-    j = nlohmann::json::object();
-    j["name"] = l.name;
-    j["type"] = static_cast<int>(l.type);
-    j["properties"] = l.properties;
-    j["tiles"] = nlohmann::json::array();
-    for (const auto &t : l.tiles) j["tiles"].push_back(t);
-}
-
-void from_json(const nlohmann::json& j, Layer& l)
-{
-    l.name = j.value("name", std::string());
-    l.type = static_cast<LayerType>(j.value("type", static_cast<int>(LayerType::TileLayer)));
-    if (j.contains("properties") && j["properties"].is_object())
+    bool Layer::AddTile(const Tile& tile)
     {
-        l.properties = j["properties"].get<std::map<std::string, nlohmann::json>>();
+        m_tiles[tile.m_y * m_width + tile.m_x] = tile;
+        return true;
     }
-    else
+
+    bool Layer::RemoveTile(unsigned int x, unsigned int y)
     {
-        l.properties.clear();
-    }
-    l.tiles.clear();
-    if (j.contains("tiles") && j["tiles"].is_array())
-    {
-        for (const auto &elem : j["tiles"])
+        try
         {
-            Tile t;
-            from_json(elem, t);
-            l.tiles.push_back(std::move(t));
+            m_tiles[y * m_width + x] = Tile();
+            return true;
         }
+        catch(...)
+        {
+            std::cout << "Error tile index out of range..." << std::endl; 
+            return false;
+        }
+        
     }
 }
-} // namespace core
