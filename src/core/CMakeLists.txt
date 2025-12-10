@@ -23,7 +23,7 @@ target_compile_features(Core PUBLIC cxx_std_20)
 set_target_properties(Core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Dépendence de Core:
-# target_link_libraries(Core PUBLIC nlohmann_json::nlohmann_json EnTT::EnTT)
+target_link_libraries(Core PUBLIC nlohmann_json::nlohmann_json)
 
 # Organisation pour l'IDE
 set_target_properties(Core PROPERTIES FOLDER "PokeMaker/Libraries")

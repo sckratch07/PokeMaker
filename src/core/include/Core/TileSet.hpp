@@ -10,12 +10,12 @@ namespace Core
         Tileset() = default;
         Tileset(const std::string& name, const std::string& imagePath, unsigned int tileSize[2])
             : m_name(name), m_imagePath(imagePath), m_tileWidth(tileSize[0]), m_tileHeight(tileSize[1]) {}
+        
+        std::string m_name = "Unnamed Tileset";
+        std::string m_imagePath = "";
 
-        std::string m_name;
-        std::string m_imagePath;
-
-        unsigned int m_tileWidth;
-        unsigned int m_tileHeight;
+        unsigned int m_tileWidth = 0;
+        unsigned int m_tileHeight = 0;
     };
 }
 

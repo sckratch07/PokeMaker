@@ -15,13 +15,13 @@ namespace Core
         return nullptr;
     }
 
-    Tileset* Project::GetTileset(const std::string& tilesetName)
+    std::shared_ptr<Tileset> Project::GetTileset(const std::string& tilesetName)
     {
         for (auto& tileset : m_tilesets)
         {
-            if (tileset.m_name == tilesetName)
+            if (tileset->m_name == tilesetName)
             {
-                return &tileset;
+                return tileset;
             }
         }
         return nullptr;
@@ -48,7 +48,7 @@ namespace Core
         return false;
     }
 
-    bool Project::AddTileset(Tileset& tileset)
+    bool Project::AddTileset(std::shared_ptr<Tileset>& tileset)
     {
         m_tilesets.push_back(tileset);
         return true;
@@ -58,9 +58,10 @@ namespace Core
     {
         for (auto& tileset : m_tilesets)
         {
-            if (tileset.m_name == tilesetName)
+            if (tileset->m_name == tilesetName)
             {
                 std::swap(tileset, m_tilesets.back());
+                tileset.~shared_ptr();
                 m_tilesets.pop_back();
                 return true;
             }
