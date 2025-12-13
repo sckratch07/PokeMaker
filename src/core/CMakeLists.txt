@@ -4,11 +4,16 @@ project(Core LANGUAGES CXX)
 
 # Librarie: Core
 set(CORE_SOURCES
-    src/Layer.cpp
-    src/Project.cpp
-    src/Tile.cpp
-    src/TileMap.cpp
-    src/Tileset.cpp
+    src/Application.cpp
+    src/Log.cpp
+    src/Time.cpp
+    src/FileSystem.cpp
+    src/Event/Event.cpp
+    src/Event/EventDispatcher.cpp
+    src/State/State.cpp
+    src/State/StateStack.cpp
+    src/Project/Project.cpp
+    src/Project/ProjectSerializer.cpp
 )
 
 add_library(Core STATIC ${CORE_SOURCES})
