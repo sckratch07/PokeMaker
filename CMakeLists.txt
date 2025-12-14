@@ -228,6 +228,16 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(portable-file-dialogs)
 
 # ----------------------------------------------------------------------------
+# Dépendance : spdlog (Bibliothèque pour les files dialogs)
+# ----------------------------------------------------------------------------
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG        v1.16.0
+)
+FetchContent_MakeAvailable(spdlog)
+
+# ----------------------------------------------------------------------------
 # Organisation des dépendances externes dans l'IDE
 # ----------------------------------------------------------------------------
 set_target_properties(
@@ -263,7 +273,7 @@ endif()
 # Module Editor - Éditeur de niveau (si activé)
 if(BUILD_EDITOR)
     message(STATUS "Configuration du module Editor")
-    add_subdirectory(src/editor)
+    add_subdirectory(src/mapeditor)
 endif()
 
 # Module Tests - Tests unitaires (si activé)
