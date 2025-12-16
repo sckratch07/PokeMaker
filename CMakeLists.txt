@@ -258,31 +258,6 @@ set_target_properties(
 # Module Core - Système de base (Application, ResourceManager, etc.)
 add_subdirectory(src/core)
 
-# Module Engine - Logique du jeu avec ECS
-add_subdirectory(src/engine)
-
-# Module Renderer - Système de rendu graphique
-add_subdirectory(src/renderer)
-
-# Module Game - Application de jeu (si activé)
-if(BUILD_GAME)
-    message(STATUS "Configuration du module Game")
-    add_subdirectory(src/game)
-endif()
-
-# Module Editor - Éditeur de niveau (si activé)
-if(BUILD_EDITOR)
-    message(STATUS "Configuration du module Editor")
-    add_subdirectory(src/mapeditor)
-endif()
-
-# Module Tests - Tests unitaires (si activé)
-if(BUILD_TESTS)
-    message(STATUS "Configuration des tests")
-    enable_testing()
-    add_subdirectory(tests)
-endif()
-
 # ----------------------------------------------------------------------------
 # Copie des ressources dans le dossier de build
 # ----------------------------------------------------------------------------

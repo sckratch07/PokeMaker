@@ -5,56 +5,36 @@
 
 namespace Core
 {
-    /**
-    * @brief Gestionnaire de temps et utilitaires de mesure.
-    *
-    * La classe Timer fournit :
-    * - le calcul du delta time
-    * - des chronomètres simples
-    * - une base commune pour animations et interpolations
-    *
-    * Utilisée par :
-    * - boucle principale
-    * - animations de tiles / sprites
-    * - systèmes nécessitant le temps
-    */
     class Timer
     {
     public:
-        /**
-        * @brief Constructeur
-        */
-        Timer();
-
-        /**
-        * @brief Met à jour le timer
-        *
-        * Doit être appelé une fois par frame.
-        */
-        void tick();
-
-        /**
-        * @brief Retourne le delta time en secondes
-        */
-        float deltaTime() const;
-
-        /**
-        * @brief Retourne le temps écoulé depuis le démarrage
-        */
-        float elapsedTime() const;
-
-        /**
-        * @brief Réinitialise le timer
-        */
-        void reset();
+        Timer() { reset(); }
+        
+        void tick()
+        {
+            auto now = clock::now();
+            m_deltaTime = std::chrono::duration<float>(now - m_last).count();
+            m_last = now;
+        }
+        
+        float deltaTime() const { return m_deltaTime; }
+        
+        float elapsedTime() const { return std::chrono::duration<float>(clock::now() - m_start).count(); }
+        
+        void reset()
+        {
+            m_start = clock::now();
+            m_last = m_start;
+            m_deltaTime = 0.f;
+        }
 
     private:
         using clock = std::chrono::high_resolution_clock;
 
-        clock::time_point m_start; /**< Temps de démarrage */
-        clock::time_point m_last; /**< Dernière frame */
-        float m_deltaTime = 0.f; /**< Delta time en secondes */
+        clock::time_point m_start;
+        clock::time_point m_last;
+        float m_deltaTime = 0.f;
     };
 }
 
-#endif // _CORE_TIMER_HPP__
+#endif
