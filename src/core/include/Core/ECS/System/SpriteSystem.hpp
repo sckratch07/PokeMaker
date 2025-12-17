@@ -12,17 +12,17 @@ namespace Core
     public:
         void update(entt::registry& reg)
         {
-            reg.view<ShapeComponent, TransformComponent>().each([&](auto entity, ShapeComponent& shape, TransformComponent& transform)
+            reg.view<ShapeComponent, TransformComponent>().each([](ShapeComponent& shape, TransformComponent& transform)
             {
                 shape.m_shape.setPosition(transform.m_position);
                 shape.m_shape.setSize(transform.m_size);
-                shape.m_shape.setRotation(transform.m_rotation);
+                shape.m_shape.setRotation(sf::degrees(transform.m_rotation));
             });
         }
 
         void render(entt::registry& reg, sf::RenderWindow& window)
         {
-            reg.view<ShapeComponent>().each([&](auto entity, ShapeComponent& shape)
+            reg.view<ShapeComponent>().each([&](ShapeComponent& shape)
             {
                 window.draw(shape.m_shape);
             });

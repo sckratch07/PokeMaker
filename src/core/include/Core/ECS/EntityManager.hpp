@@ -11,7 +11,7 @@ namespace Core
         EntityManager() = default;
         ~EntityManager() = default;
 
-        entt::entity& createEntity();
+        entt::entity createEntity();
 
         void destroyEntity(entt::entity entity);
 

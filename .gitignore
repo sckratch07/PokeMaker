@@ -1,4 +1,5 @@
 /build
+/out
 *.obj
 *.pdb
 *.idb
@@ -11,5 +12,4 @@
 *.ipch
 *.iobj
 *.exe
-/docs
 /.vs
