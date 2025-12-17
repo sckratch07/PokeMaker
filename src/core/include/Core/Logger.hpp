@@ -22,7 +22,7 @@ namespace Core
         /**
          * @brief Récupère le logger principal.
          */
-        inline static std::shared_ptr<spdlog::logger>& Get();
+        inline static std::shared_ptr<spdlog::logger>& Get() { return s_logger; }
         
         private:
             static std::shared_ptr<spdlog::logger> s_logger;

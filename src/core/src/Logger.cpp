@@ -1,4 +1,5 @@
 #include "Core/Logger.hpp"
+
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
@@ -30,10 +31,5 @@ namespace Core
 
         s_logger->set_level(spdlog::level::trace);
         s_logger->flush_on(spdlog::level::warn);
-    }
-
-    std::shared_ptr<spdlog::logger>& Logger::Get()
-    {
-        return s_logger;
     }
 }

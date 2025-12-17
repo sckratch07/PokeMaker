@@ -8,7 +8,7 @@ set(CORE_SOURCES
     src/Logger.cpp
 )
 
-add_library(Core STATIC ${CORE_SOURCES} )
+add_library(Core STATIC ${CORE_SOURCES})
 
 target_include_directories(Core
     PUBLIC

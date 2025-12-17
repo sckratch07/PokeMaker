@@ -35,13 +35,13 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
-        timer.reset();
+        timer.tick();
         deltatime = timer.deltaTime();
 
         intSystem.update(reg, deltatime);
         sprSystem.update(reg);
 
-        window.clear(sf::Color(200, 200, 200));
+        window.clear(sf::Color(20, 20, 20));
 
         sprSystem.render(reg, window);
 
