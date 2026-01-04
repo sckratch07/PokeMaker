@@ -1,5 +1,5 @@
-#ifndef _CORE_SHAPECOMPONENT_HPP__
-#define _CORE_SHAPECOMPONENT_HPP__
+#ifndef _CORE_SHAPE_COMPONENT_HPP__
+#define _CORE_SHAPE_COMPONENT_HPP__
 
 #include <SFML/Graphics.hpp>
 

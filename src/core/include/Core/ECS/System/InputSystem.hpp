@@ -1,14 +1,11 @@
 #ifndef _CORE_INPUT_SYSTEM_HPP__
 #define _CORE_INPUT_SYSTEM_HPP__
 
-#include "Core/ECS/Component/TransformComponent.hpp"
-#include "Core/ECS/Component/InputComponent.hpp"
-#include <entt/entt.hpp>
-#include <iostream>
+#include <Core/ECS/System/System.hpp>
 
 namespace Core
 {
-    class InputSystem
+    class InputSystem : public System
     {
     public:
         void update(entt::registry& reg, float dt)

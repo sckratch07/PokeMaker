@@ -1,13 +1,11 @@
 #ifndef _CORE_SPRITE_SYSTEM_HPP__
 #define _CORE_SPRITE_SYSTEM_HPP__
 
-#include "Core/ECS/Component/ShapeComponent.hpp"
-#include "Core/ECS/Component/TransformComponent.hpp"
-#include <entt/entt.hpp>
+#include <Core/ECS/System/System.hpp>
 
 namespace Core
 {
-    class SpriteSystem
+    class SpriteSystem : public System
     {
     public:
         void update(entt::registry& reg)

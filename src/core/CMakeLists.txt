@@ -6,6 +6,9 @@ project(Core LANGUAGES CXX)
 set(CORE_SOURCES
     src/EntityManager.cpp
     src/Logger.cpp
+    src/Project.cpp
+    src/ProjectManager.cpp
+    src/Map.cpp
 )
 
 add_library(Core STATIC ${CORE_SOURCES})
@@ -21,13 +24,3 @@ set_target_properties(Core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Dépendence de Core:
 target_link_libraries(Core PUBLIC EnTT::EnTT nlohmann_json::nlohmann_json SFML::Graphics SFML::Window SFML::System spdlog::spdlog)
-
-# Organisation pour l'IDE
-set_target_properties(Core PROPERTIES FOLDER "PokeMaker/Libraries")
-
-add_executable(test test.cpp ${CORE_SOURCES})
-target_include_directories(test
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_link_libraries(test PUBLIC EnTT::EnTT nlohmann_json::nlohmann_json SFML::Graphics SFML::Window SFML::System spdlog::spdlog)

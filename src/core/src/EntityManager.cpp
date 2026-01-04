@@ -3,26 +3,60 @@
 
 namespace Core
 {
+    void EntityManager::serialize(const json& data)
+    {
+
+    }
+
     entt::entity EntityManager::createEntity()
     {
-        LOG_DEBUG("[EntityManager] : An entity has been created.");
-        return m_registry.create();
+        entt::entity entity = m_registry.create();
+        LOG_DEBUG("[EntityManager] : An entity has been created | ID : {}", static_cast<uint32_t>(entity));
+        return entity;
+    }
+
+    void EntityManager::addSystem(std::unique_ptr<System>& system)
+    {
+        m_systems.push_back(system);
+        LOG_DEBUG("[EntityManager] : The system : {} has been added !", typeid(*system).name());
     }
 
     void EntityManager::destroyEntity(entt::entity entity)
     {
         if (m_registry.valid(entity))
         {
+            LOG_DEBUG("[EntityManager] : An entity has been deleted | ID : {}", static_cast<uint32_t>(entity));
             m_registry.destroy(entity);
-            LOG_DEBUG("[EntityManager] : An entity has been deleted.");
             return;
         }
         LOG_WARN("[EntityManager] : The entity could not be deleted.");
     }
 
-    void EntityManager::clear()
+    void EntityManager::update(float dt)
+    {
+        for (auto& system : m_systems)
+        {
+            system->update(m_registry, dt);
+        }
+    }
+
+    void EntityManager::render(sf::RenderWindow& window)
+    {
+        for (auto& system : m_systems)
+        {
+            system->render(m_registry, window);
+        }
+    }
+
+    void EntityManager::clearEntities()
     {
         m_registry.clear();
         LOG_DEBUG("[EntityManager] : The registry has been emptied.");
+    }
+
+    void EntityManager::clearSystems()
+    {
+        m_systems.clear();
+        LOG_DEBUG("[EntityManager] : All systems has been deleted.");
     }
 }

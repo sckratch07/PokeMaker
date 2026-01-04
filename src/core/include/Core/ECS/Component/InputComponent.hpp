@@ -1,5 +1,5 @@
-#ifndef _CORE_INPUTCOMPONENT_HPP__
-#define _CORE_INPUTCOMPONENT_HPP__
+#ifndef _CORE_INPUT_COMPONENT_HPP__
+#define _CORE_INPUT_COMPONENT_HPP__
 
 #include <SFML/Graphics.hpp>
 

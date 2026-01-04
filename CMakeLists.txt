@@ -258,6 +258,11 @@ set_target_properties(
 # Module Core - Système de base (Application, ResourceManager, etc.)
 add_subdirectory(src/core)
 
+# Module Editor - Éditeur
+if (BUILD_EDITOR)
+    add_subdirectory(src/editor)
+endif()
+
 # ----------------------------------------------------------------------------
 # Copie des ressources dans le dossier de build
 # ----------------------------------------------------------------------------
