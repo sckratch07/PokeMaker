@@ -10,7 +10,7 @@ namespace Core
             m_currentProject = nullptr;
 
         m_currentProject->create(name, path);
-    } 
+    }
 
     void ProjectManager::loadProject(const std::string& path)
     {
