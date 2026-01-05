@@ -3,17 +3,18 @@
 
 #include "Editor/Panel/PanelManager.hpp"
 #include "Core/Application.hpp"
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 namespace Editor 
 {
     class EditorApplication : public Core::Application
     {
     public:
-        EditorApplication() : Core::Application(), m_panelManager(std::make_unique<PanelManager>(m_window)) {}
+        EditorApplication()
+            : Core::Application(), m_panelManager(std::make_unique<PanelManager>(m_window, m_projectManager, m_entityManager)) {}
         ~EditorApplication() = default;
-
-        void run();
-    
+        
     private:
         void init() override;
         void handleEvents(const std::optional<sf::Event>& event) override;
@@ -21,6 +22,7 @@ namespace Editor
         void render() override;
 
         std::unique_ptr<PanelManager> m_panelManager;
+        ImFont* m_font;
     };
 }
 

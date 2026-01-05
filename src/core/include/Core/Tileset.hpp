@@ -16,7 +16,7 @@ namespace Core
             unsigned int tu = id % tilesPerRow;
             unsigned int tv = id / tilesPerRow;
 
-            return sf::IntRect({tu * m_tileSize.x, tv * m_tileSize.y}, {m_tileSize.x, m_tileSize.y});
+            return sf::IntRect({static_cast<int>(tu * m_tileSize.x), static_cast<int>(tv * m_tileSize.y)}, m_tileSize);
         }
 
         std::shared_ptr<Texture> m_texture;

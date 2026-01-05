@@ -15,7 +15,7 @@ namespace Core
         return entity;
     }
 
-    void EntityManager::addSystem(std::unique_ptr<System>& system)
+    void EntityManager::addSystem(System* system)
     {
         m_systems.push_back(system);
         LOG_DEBUG("[EntityManager] : The system : {} has been added !", typeid(*system).name());
@@ -56,6 +56,9 @@ namespace Core
 
     void EntityManager::clearSystems()
     {
+        for (auto system : m_systems)
+            delete system;
+        
         m_systems.clear();
         LOG_DEBUG("[EntityManager] : All systems has been deleted.");
     }

@@ -4,6 +4,7 @@
 #include "Core/ProjectManager.hpp"
 #include "Core/ECS/EntityManager.hpp"
 #include "Core/Timer.hpp"
+#include "Core/Logger.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace Core
@@ -12,13 +13,11 @@ namespace Core
     {
     public:
         Application(const std::string name = "PokeMaker", sf::Vector2u size = { 1584, 864 })
-            : m_name(name), m_size(size)
+            : m_name(name), m_window(sf::VideoMode(size), name), m_size(size)
         {
-            m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(size), name);
-
+            Logger::Init();
             m_projectManager = std::make_unique<Core::ProjectManager>();
             m_entityManager = std::make_unique<Core::EntityManager>();
-            m_timer = std::make_unique<Core::Timer>();
         }
 
         virtual ~Application() = default;
@@ -26,22 +25,22 @@ namespace Core
         void run()
         {
             init();
-            while (m_window->isOpen())
+            while (m_window.isOpen())
             {
-                m_timer->tick();
+                m_timer.tick();
 
-                while (std::optional<sf::Event> event = m_window->pollEvent())
+                while (std::optional<sf::Event> event = m_window.pollEvent())
                 {
                     handleEvents(event);
                 }
 
                 update();
 
-                m_window->clear(sf::Color(20, 23, 30));
+                m_window.clear(sf::Color(20, 23, 30));
                 
                 render();
 
-                m_window->display();
+                m_window.display();
             }
         }
 
@@ -54,13 +53,13 @@ namespace Core
         virtual void update() = 0;
         virtual void render() = 0;
 
-        std::shared_ptr<sf::RenderWindow> m_window;
+        sf::RenderWindow m_window;
         std::string m_name;
         sf::Vector2u m_size;
 
         std::shared_ptr<ProjectManager> m_projectManager;
         std::shared_ptr<EntityManager> m_entityManager;
-        std::shared_ptr<Timer> m_timer;
+        Timer m_timer;
     };
 }
 

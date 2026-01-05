@@ -19,7 +19,7 @@ namespace Core
 
         entt::entity createEntity();
 
-        void addSystem(std::unique_ptr<System>& system);
+        void addSystem(System* system);
 
         void destroyEntity(entt::entity entity);
 
@@ -36,7 +36,7 @@ namespace Core
 
     private:
         entt::registry m_registry;
-        std::vector<std::unique_ptr<System>> m_systems;
+        std::vector<System*> m_systems;
 
     };
 }

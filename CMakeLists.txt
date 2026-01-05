@@ -221,11 +221,11 @@ FetchContent_MakeAvailable(nlohmann_json)
 # ----------------------------------------------------------------------------
 # Utilisé pour la sérialisation/désérialisation des maps et configurations
 FetchContent_Declare(
-    portable-file-dialogs
+    portable_file_dialogs
     GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
     GIT_TAG        0.1.0
 )
-FetchContent_MakeAvailable(portable-file-dialogs)
+FetchContent_MakeAvailable(portable_file_dialogs)
 
 # ----------------------------------------------------------------------------
 # Dépendance : spdlog (Bibliothèque pour les files dialogs)
