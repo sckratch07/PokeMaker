@@ -13,5 +13,4 @@
 *.ipch
 *.iobj
 *.exe
-/docs
 /build

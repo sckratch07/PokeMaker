@@ -4,6 +4,7 @@ project(Editor LANGUAGES CXX)
 
 # Librarie: Core
 set(EDITOR_SOURCES
+    src/Menu/MapMenu.cpp
     src/Application.cpp
     src/PanelManager.cpp
 )

@@ -13,7 +13,7 @@ namespace Core
     {
         Map( const std::string& name, unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight)
             : m_name(name), m_width(width), m_height(height), m_tileWidth(tileWidth), m_tileHeight(tileHeight) {}
-
+        
         void addLayer(std::string& name) { m_layers.push_back({name, m_width * m_height}); }
         void addEntity(entt::entity entity) { m_entities.push_back(entity); }
         void addTileToLayer(entt::entity tile, unsigned int layerIndex, unsigned int x, unsigned int y)

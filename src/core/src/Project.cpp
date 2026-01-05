@@ -13,21 +13,35 @@ namespace Core
         try
         {
             std::filesystem::create_directories(path + "/data");
-            std::filesystem::create_directories(path + "/component");
-            std::filesystem::create_directories(path + "/system");
+            std::filesystem::create_directories(path + "/module/components");
+            std::filesystem::create_directories(path + "/module/systems");
             std::filesystem::create_directories(path + "/resources");
 
-            std::ofstream file(path + "/ProjectData.json");
-            if (!file.is_open())
+            std::ofstream jsonFile(path + "/ProjectData.json");
+            if (!jsonFile.is_open())
             {
-                LOG_ERROR("[Project]: Failed to create project directory.");
+                LOG_ERROR("[Project]: Failed to create ProjectData.json");
                 return false;
             }
 
             json j;
             j["name"] = name;
             j["path"] = path;
-            file << j;
+            jsonFile << j;
+            jsonFile.close();
+
+            std::ofstream cmake(path + "/CMakeLists.txt");
+            if (!cmake.is_open())
+            {
+                LOG_ERROR("[Project]: Failed to create CMakeLists.txt.");
+                return false;
+            }
+
+            cmake << "cmake_minimum_required(VERSION 3.5)" << std::endl;
+            cmake << "project(ProjectFile_" << name <<")\n" << std::endl;
+            cmake << "add_library(${PROJECT_NAME} INTERFACE)" << std::endl;
+            cmake << "target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/module/components ${CMAKE_CURRENT_SOURCE_DIR}/module/systems)" << std::endl;
+            cmake.close();
 
             m_name = name;
             m_path = path;
@@ -55,7 +69,6 @@ namespace Core
             file >> j;
             m_name = j.value("name", "");
             m_path = j.value("path", "");
-
             file.close();
 
             LOG_DEBUG("[Project]: Project loaded successfully.");

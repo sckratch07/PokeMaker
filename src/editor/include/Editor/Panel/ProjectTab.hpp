@@ -5,12 +5,10 @@
 #include <SFML/Graphics.hpp>
 #include <portable-file-dialogs.h>
 #include <imgui.h>
-#include <filesystem>
-#include <optional>
 
-namespace Editor::PanelTab::ProjectTab
+namespace Editor::PanelTab
 {
-    void tab(std::shared_ptr<Core::ProjectManager>& projectManager)
+    void projectTab(std::shared_ptr<Core::ProjectManager>& projectManager)
     {
         bool activeProject = projectManager->getProject() != nullptr;
         if (ImGui::BeginMenu("Project"))
@@ -39,7 +37,7 @@ namespace Editor::PanelTab::ProjectTab
         }
     }
 
-    void handleEvents(const std::optional<sf::Event>& event, std::shared_ptr<Core::ProjectManager>& projectManager)
+    void shortcutProject(const std::optional<sf::Event>& event, std::shared_ptr<Core::ProjectManager>& projectManager)
     {
         if (const auto* key = event->getIf<sf::Event::KeyPressed>())
         {

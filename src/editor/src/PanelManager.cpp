@@ -8,11 +8,12 @@ namespace Editor
     void PanelManager::update()
     {
         docking();
+        m_mapMenu->update(m_projectManager);
     }
 
     void PanelManager::handleEvents(const std::optional<sf::Event>& event)
     {
-        PanelTab::ProjectTab::handleEvents(event, m_projectManager);
+        PanelTab::shortcutProject(event, m_projectManager);
     }
 
     void PanelManager::docking()
@@ -26,8 +27,8 @@ namespace Editor
             ImGui::DockSpace(ImGui::GetID("DockSpace"), { 0,0 }, ImGuiDockNodeFlags_PassthruCentralNode);
             if (ImGui::BeginMainMenuBar())
             {
-                PanelTab::ProjectTab::tab(m_projectManager);
-                PanelTab::HelpTab::tab();
+                PanelTab::projectTab(m_projectManager);
+                PanelTab::helpTab();
             }
             ImGui::EndMainMenuBar();
         }
