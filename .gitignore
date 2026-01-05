@@ -14,3 +14,4 @@
 *.iobj
 *.exe
 /docs
+/build

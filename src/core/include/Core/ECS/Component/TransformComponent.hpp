@@ -1,0 +1,20 @@
+#ifndef _CORE_TRANSFORM_COMPONENT_HPP__
+#define _CORE_TRANSFORM_COMPONENT_HPP__
+
+#include <SFML/Graphics.hpp>
+
+namespace Core
+{
+    struct TransformComponent
+    {
+		TransformComponent(sf::Vector2f size, float velocity, sf::Vector2f position = {0.f, 0.f}, float rotation = 0.f)
+			: m_size(size), m_velocity(velocity), m_position(position), m_rotation(rotation) {}
+
+    	sf::Vector2f m_size;
+    	sf::Vector2f m_position;
+	    float m_velocity;
+    	float m_rotation;
+    };
+}
+
+#endif
