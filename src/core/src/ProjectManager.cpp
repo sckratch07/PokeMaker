@@ -40,7 +40,7 @@ namespace Core
         return &m_maps.back();
     }
 
-    void ProjectManager::deleteMap(Map* map)
+    void ProjectManager::deleteMap(Map* map, std::shared_ptr<EntityManager>& manager)
     {
         auto it = std::find_if(m_maps.begin(), m_maps.end(),
             [&](const Map& m)
@@ -48,7 +48,21 @@ namespace Core
                 return &m == map;
             }
         );
-        std::swap(m_maps[std::distance(m_maps.begin(), it)], m_maps.back());
-        m_maps.pop_back();
+
+        size_t index = std::distance(m_maps.begin(), it);
+        if (!m_maps.empty() && index < m_maps.size())
+        {
+            for (unsigned int i = 0; i < map->m_entities.size(); i++)
+                map->deleteEntity(i, manager);
+            
+            for (unsigned int i = 0; i < map->m_layers.size(); i++)
+                map->deleteLayer(i, manager);
+
+            for (size_t i = index; i < m_maps.size() - 1; i++)
+            {
+                std::swap(m_maps[i], m_maps[i + 1]);
+            }
+            m_maps.pop_back();
+        }
     }
 }

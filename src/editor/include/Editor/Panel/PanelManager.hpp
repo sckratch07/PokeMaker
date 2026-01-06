@@ -13,7 +13,7 @@ namespace Editor
     public:
         PanelManager(sf::RenderWindow& window, std::shared_ptr<Core::ProjectManager>& projectManager, std::shared_ptr<Core::EntityManager>& entityManager)
             : m_window(window), m_projectManager(projectManager), m_entityManager(entityManager),
-            m_mapMenu(std::make_unique<PanelMenu::MapMenu>())
+            m_mapMenu(std::make_unique<PanelMenu::MapMenu>(entityManager))
         {}
 
         void handleEvents(const std::optional<sf::Event>& event);
@@ -21,7 +21,8 @@ namespace Editor
         void update();
 
     private:
-        void docking();
+        void beginDocking();
+        void endDocking();
 
         sf::RenderWindow& m_window;
         std::shared_ptr<Core::ProjectManager> m_projectManager;

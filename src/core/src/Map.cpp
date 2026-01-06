@@ -3,13 +3,14 @@
 
 namespace Core
 {
-    void Map::deleteLayer(unsigned int layerIndex, std::unique_ptr<EntityManager>& manager)
+    void Map::deleteLayer(unsigned int layerIndex, std::shared_ptr<EntityManager>& manager)
     {
         if (layerIndex >= m_layers.size()) return;
 
-        for (auto& tile : m_layers[layerIndex].m_tiles)
+        for (int i = 0; i < m_layers[layerIndex].m_tiles.size(); i++)
         {
-            if (tile.m_id != entt::null) manager->destroyEntity(tile.m_id);
+            if (m_layers[layerIndex].m_tiles[i].m_id != entt::null)
+                manager->destroyEntity(m_layers[layerIndex].m_tiles[i].m_id);
         }
 
         for (unsigned int i = layerIndex; i < m_layers.size() - 2; i++)
@@ -20,14 +21,14 @@ namespace Core
         m_layers.pop_back();
     }
 
-    void Map::deleteEntity(unsigned int index, std::unique_ptr<EntityManager>& manager)
+    void Map::deleteEntity(unsigned int index, std::shared_ptr<EntityManager>& manager)
     {
         manager->destroyEntity(m_entities[index]);
         std::swap(m_entities[index], m_entities.back());
         m_entities.pop_back();
     }
 
-    void Map::deleteTileFromLayer(unsigned int layerIndex, unsigned int x, unsigned int y, std::unique_ptr<EntityManager>& manager)
+    void Map::deleteTileFromLayer(unsigned int layerIndex, unsigned int x, unsigned int y, std::shared_ptr<EntityManager>& manager)
     {
         if (layerIndex >= m_layers.size()) return;
 

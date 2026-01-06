@@ -2,6 +2,7 @@
 #define _EDITOR_MAP_MENU_HPP__
 
 #include "Core/ProjectManager.hpp"
+#include "Core/ECS/EntityManager.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace Editor::PanelMenu
@@ -9,7 +10,7 @@ namespace Editor::PanelMenu
     class MapMenu
     {
     public:
-        MapMenu() : m_currentMap(nullptr), m_tileSelected(0), m_layerSelected(0) {}
+        MapMenu(std::shared_ptr<Core::EntityManager>& entityManger) : m_entityManager(entityManger), m_currentMap(nullptr), m_tileSelected(0), m_layerSelected(0) {}
         ~MapMenu() = default;
         
         void handleEvents(const std::optional<sf::Event>& event);
@@ -23,6 +24,8 @@ namespace Editor::PanelMenu
         void tilePropriety();
 
         Core::Map* m_currentMap;
+        std::shared_ptr<Core::EntityManager> m_entityManager;
+
         unsigned int m_tileSelected;
         unsigned int m_layerSelected;
 

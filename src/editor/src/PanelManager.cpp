@@ -7,8 +7,11 @@ namespace Editor
 {
     void PanelManager::update()
     {
-        docking();
+        beginDocking();
+
         m_mapMenu->update(m_projectManager);
+        
+        endDocking();
     }
 
     void PanelManager::handleEvents(const std::optional<sf::Event>& event)
@@ -16,13 +19,16 @@ namespace Editor
         PanelTab::shortcutProject(event, m_projectManager);
     }
 
-    void PanelManager::docking()
+    void PanelManager::beginDocking()
     {
-        ImGui::SetNextWindowSize(ImGui::GetCursorScreenPos());
-        ImGui::SetNextWindowPos(ImGui::GetCursorStartPos());
-        if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_DockNodeHost |
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar))
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        if (ImGui::Begin("Window", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar
+            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground))
         {
             ImGui::DockSpace(ImGui::GetID("DockSpace"), { 0,0 }, ImGuiDockNodeFlags_PassthruCentralNode);
             if (ImGui::BeginMainMenuBar())
@@ -32,6 +38,10 @@ namespace Editor
             }
             ImGui::EndMainMenuBar();
         }
+    }
+
+    void PanelManager::endDocking()
+    {
         ImGui::End();
     }
 }

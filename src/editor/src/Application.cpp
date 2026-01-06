@@ -100,6 +100,7 @@ namespace Editor
             // === CONFIG ===
             io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
             io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+            io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         }
     }
     

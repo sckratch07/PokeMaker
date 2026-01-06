@@ -11,7 +11,7 @@ namespace Core
 
     struct Map
     {
-        Map( const std::string& name, unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight)
+        Map(const std::string& name, unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight)
             : m_name(name), m_width(width), m_height(height), m_tileWidth(tileWidth), m_tileHeight(tileHeight) {}
         
         void addLayer(std::string& name) { m_layers.push_back({name, m_width * m_height}); }
@@ -24,9 +24,9 @@ namespace Core
             m_layers[layerIndex].m_tiles[index] = Tile(tile);
         }
 
-        void deleteLayer(unsigned int layerIndex, std::unique_ptr<EntityManager>& manager);
-        void deleteEntity(unsigned int index, std::unique_ptr<EntityManager>& manager);
-        void deleteTileFromLayer(unsigned int layerIndex, unsigned int x, unsigned int y, std::unique_ptr<EntityManager>& manager);
+        void deleteLayer(unsigned int layerIndex, std::shared_ptr<EntityManager>& manager);
+        void deleteEntity(unsigned int index, std::shared_ptr<EntityManager>& manager);
+        void deleteTileFromLayer(unsigned int layerIndex, unsigned int x, unsigned int y, std::shared_ptr<EntityManager>& manager);
         
         unsigned int m_width = 0;
         unsigned int m_height = 0;
@@ -37,8 +37,6 @@ namespace Core
         std::string m_name;
         std::vector<Layer> m_layers;
         std::vector<entt::entity> m_entities;
-
-
     };
 }
 
